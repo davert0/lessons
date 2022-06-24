@@ -1,11 +1,10 @@
 class Node:
-
     def __init__(self, v):
         self.value = v
         self.next = None
 
-class LinkedList:
 
+class LinkedList:
     def __init__(self):
         self.head = None
         self.tail = None
@@ -66,7 +65,7 @@ class LinkedList:
 
     def clean(self):
         self.head = None
-        self.tail = None 
+        self.tail = None
 
     def len(self):
         res = 0
@@ -75,7 +74,6 @@ class LinkedList:
             res += 1
             node = node.next
         return res
-
 
     def insert(self, afterNode, newNode):
         if self.tail is None:
@@ -92,14 +90,3 @@ class LinkedList:
                 node.next = newNode
                 newNode.next = buff
                 return
-
-
-
-
-
-
-
-
-
-
-
