@@ -19,7 +19,7 @@ class LinkedList:
     def print_all_nodes(self):
         node = self.head
         while node != None:
-            # print(node.value)
+            print(node.value)
             node = node.next
 
     def find(self, val):
@@ -40,6 +40,8 @@ class LinkedList:
         return res
 
     def delete(self, val, all=False):
+        if self.head == None:
+            return
         while self.head.value == val:
             self.head = self.head.next
             if not all:
