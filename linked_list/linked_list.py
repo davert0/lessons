@@ -40,30 +40,38 @@ class LinkedList:
         return res
 
     def delete(self, val, all=False):
-        if self.head == None:
-            return
+        if self.head is None:
+            return None
+
         while self.head.value == val:
             self.head = self.head.next
+            if self.head is None:
+                self.tail = None
+                return
             if not all:
                 return
-        slow = self.head
-        fast = slow.next
-        while fast is not None:
-            while fast.value == val:
-                if fast.next is None:
-                    slow.next = None
-                    self.tail = slow
-                    return
-                fast = fast.next
+
+        prev = self.head
+        node = self.head
+        while node is not None:
+            if node.value == val:
+                if all:
+                    prev.next = node.next if node.next is not None and node.next.value != val else prev.next
+                    node = node.next
+                    if node is None:
+                        prev.next = None
+                        self.tail = prev
+                    continue
+                else:
+                    prev.next = node.next
+                if prev.next is None:
+                    self.tail = prev
                 if not all:
-                    slow.next = fast
-                    slow = slow.next
-                    fast = slow.next
                     return
 
-            slow.next = fast
-            slow = slow.next
-            fast = slow.next
+            prev = node 
+            node = node.next
+        return None
 
     def clean(self):
         self.head = None
