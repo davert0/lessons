@@ -99,4 +99,7 @@ class LinkedList:
                 buff = node.next
                 node.next = newNode
                 newNode.next = buff
+                if newNode.next is None:
+                    self.tail = newNode
                 return
+            node = node.next
