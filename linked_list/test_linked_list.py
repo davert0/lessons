@@ -184,3 +184,23 @@ class TestInsert(unittest.TestCase):
         self.assertEqual(self.list_.head, node_2)
         self.assertEqual(self.list_.tail.value, 16)
         self.assertEqual(node_1.next.value, 19)
+
+
+class TestFindAll(unittest.TestCase):
+    def setUp(self) -> None:
+        self.empty_list = LinkedList()
+        
+        self.full_list = LinkedList()
+        for i in range(100):
+            self.full_list.add_in_tail(Node(i))
+
+    def test_find_all_empty_list(self):
+        self.assertEqual(self.empty_list.find_all(12), [])
+
+    def test_find_all_one_value(self):
+        self.assertEqual(len(self.full_list.find_all(1)), 1)
+
+    def test_find_all_several_values(self):
+        for i in range(5):
+            self.full_list.add_in_tail(Node(5))
+        self.assertEqual(len(self.full_list.find_all(5)), 6)
