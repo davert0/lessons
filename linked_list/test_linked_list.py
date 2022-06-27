@@ -4,6 +4,7 @@ import unittest
 from numpy import empty
 
 from linked_list import Node, LinkedList
+from sum_lists import sum_linked_lists
 
 class TestDelete(unittest.TestCase):
     def setUp(self) -> None:
@@ -239,3 +240,17 @@ class TestClean(unittest.TestCase):
         self.assertEqual(self.full_list.head, None)
         self.assertEqual(self.full_list.tail, None)
         self.assertEqual(self.full_list.len(), 0)
+
+
+class TestSumLists(unittest.TestCase):
+    def setUp(self) -> None:
+        self.first_list = LinkedList()
+        self.second_list = LinkedList()
+
+        for i in range(5):
+            self.first_list.add_in_tail(Node(i))
+            self.second_list.add_in_tail(Node(i))
+
+    def test_sum(self):
+        res = sum_linked_lists(self.first_list, self.second_list)
+        self.assertEqual(res, [0, 2, 4, 6, 8])
