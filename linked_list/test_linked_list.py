@@ -186,6 +186,21 @@ class TestInsert(unittest.TestCase):
         self.assertEqual(node_1.next.value, 19)
 
 
+class TestLen(unittest.TestCase):
+    def setUp(self) -> None:
+        self.empty_list = LinkedList()
+        
+        self.full_list = LinkedList()
+        for i in range(100):
+            self.full_list.add_in_tail(Node(i))
+
+    def test_empty_len(self):
+        self.assertEqual(self.empty_list.len(), 0)
+
+    def test_full_len(self):
+        self.assertEqual(self.full_list.len(), 100)
+
+
 class TestFindAll(unittest.TestCase):
     def setUp(self) -> None:
         self.empty_list = LinkedList()
@@ -204,3 +219,23 @@ class TestFindAll(unittest.TestCase):
         for i in range(5):
             self.full_list.add_in_tail(Node(5))
         self.assertEqual(len(self.full_list.find_all(5)), 6)
+
+
+class TestClean(unittest.TestCase):
+    def setUp(self) -> None:
+        self.empty_list = LinkedList()
+        
+        self.full_list = LinkedList()
+        for i in range(100):
+            self.full_list.add_in_tail(Node(i))
+
+    def test_clean_empty(self):
+        self.empty_list.clean()
+        self.assertEqual(self.empty_list.head, None)
+        self.assertEqual(self.empty_list.tail, None)
+
+    def test_clean_full(self):
+        self.full_list.clean()
+        self.assertEqual(self.full_list.head, None)
+        self.assertEqual(self.full_list.tail, None)
+        self.assertEqual(self.full_list.len(), 0)
