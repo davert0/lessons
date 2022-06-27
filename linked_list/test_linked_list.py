@@ -1,6 +1,5 @@
 import unittest
 
-from numpy import empty
 
 from linked_list import Node, LinkedList
 from sum_lists import sum_linked_lists
