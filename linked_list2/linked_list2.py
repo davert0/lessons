@@ -2,9 +2,10 @@ class Node:
     def __init__(self, v):
         self.value = v
         self.next = None
+        self.prev = None
 
 
-class LinkedList:
+class LinkedList2:
     def __init__(self):
         self.head = None
         self.tail = None
@@ -12,15 +13,12 @@ class LinkedList:
     def add_in_tail(self, item):
         if self.head is None:
             self.head = item
+            item.prev = None
+            item.next = None
         else:
             self.tail.next = item
+            item.prev = self.tail
         self.tail = item
-
-    def print_all_nodes(self):
-        node = self.head
-        while node != None:
-            print(node.value)
-            node = node.next
 
     def find(self, val):
         node = self.head
@@ -51,25 +49,18 @@ class LinkedList:
             if not all:
                 return
 
-        prev = self.head
         node = self.head
+        if self.head.prev is not None:
+            self.head.prev = None
         while node is not None:
             if node.value == val:
-                if all:
-                    prev.next = node.next if node.next is not None and node.next.value != val else prev.next
-                    node = node.next
-                    if node is None:
-                        prev.next = None
-                        self.tail = prev
-                    continue
+                node.prev.next = node.next
+                if node.prev.next is None:
+                    self.tail = node.prev
                 else:
-                    prev.next = node.next
-                if prev.next is None:
-                    self.tail = prev
+                    node.next.prev = node.prev
                 if not all:
-                    return
-
-            prev = node 
+                    break
             node = node.next
         return None
 
