@@ -77,19 +77,27 @@ class LinkedList2:
         return res
 
     def insert(self, afterNode, newNode):
+#         Если afterNode = None и список пустой, добавьте новый элемент первым в списке.
+#         Если afterNode = None и список непустой, добавьте новый элемент последним в списке.
         if self.tail is None:
             self.tail = newNode
-        if afterNode is None:
+        if afterNode is None and self.len() == 0:
             buff = self.head
             self.head = newNode
             self.head.next = buff
             return
+        elif afterNode is None:
+            self.add_in_tail(newNode)
+            return
         node = self.head
         while node is not None:
             if node == afterNode:
-                buff = node.next
+                if node.next is not None:
+                    node.next.prev = newNode
+                
+                newNode.next = node.next
                 node.next = newNode
-                newNode.next = buff
+                newNode.prev = node
                 if newNode.next is None:
                     self.tail = newNode
                 return
