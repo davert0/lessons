@@ -77,8 +77,6 @@ class LinkedList2:
         return res
 
     def insert(self, afterNode, newNode):
-#         Если afterNode = None и список пустой, добавьте новый элемент первым в списке.
-#         Если afterNode = None и список непустой, добавьте новый элемент последним в списке.
         if self.tail is None:
             self.tail = newNode
         if afterNode is None and self.len() == 0:
@@ -102,3 +100,11 @@ class LinkedList2:
                     self.tail = newNode
                 return
             node = node.next
+
+    def add_in_head(self, newNode):
+        if self.head is None:
+            self.tail = newNode
+        else:
+            newNode.next = self.head
+            self.head.prev = newNode
+        self.head = newNode

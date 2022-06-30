@@ -249,15 +249,21 @@ class TestClean(unittest.TestCase):
         self.assertEqual(self.full_list.len(), 0)
 
 
-# class TestSumLists(unittest.TestCase):
-#     def setUp(self) -> None:
-#         self.first_list = LinkedList2()
-#         self.second_list = LinkedList2()
+class TestAddInHead(unittest.TestCase):
+    def setUp(self) -> None:
+        self.empty_list = LinkedList2()
 
-#         for i in range(5):
-#             self.first_list.add_in_tail(Node(i))
-#             self.second_list.add_in_tail(Node(i))
-
-#     def test_sum(self):
-#         res = sum_linked_lists(self.first_list, self.second_list)
-#         self.assertEqual(res, [0, 2, 4, 6, 8])
+    def test_add_in_empty(self):
+        node_1 = Node(1)
+        self.empty_list.add_in_head(node_1)
+        self.assertEqual(self.empty_list.len(), 1)
+        self.assertEqual(self.empty_list.head, node_1)
+        self.assertEqual(self.empty_list.tail, node_1)
+        node_2 = Node(2)
+        self.empty_list.add_in_head(node_2)
+        self.assertEqual(self.empty_list.head, node_2)
+        self.assertEqual(self.empty_list.tail, node_1)
+        self.assertEqual(self.empty_list.tail.prev, node_2)
+        self.assertEqual(self.empty_list.tail.next, None)
+        self.assertEqual(self.empty_list.head.next, node_1)
+        self.assertEqual(self.empty_list.head.prev, None)
