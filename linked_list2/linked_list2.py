@@ -46,6 +46,7 @@ class LinkedList2:
             if self.head is None:
                 self.tail = None
                 return
+            self.head.prev = None
             if not all:
                 return
 

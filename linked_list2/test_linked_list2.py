@@ -160,6 +160,27 @@ class TestDelete(unittest.TestCase):
         self.assertEqual(self.empty_list.head, None)
         self.assertEqual(self.empty_list.tail, None)
 
+    def test_delete_from_two_elements(self):
+        node_1 = Node(1)
+        node_2 = Node(2)
+        self.empty_list.add_in_tail(node_1)
+        self.empty_list.add_in_tail(node_2)
+        self.assertEqual(self.empty_list.len(), 2)
+        self.empty_list.delete(2)
+        self.assertEqual(self.empty_list.head, node_1)
+        self.assertEqual(self.empty_list.tail, node_1)
+        self.assertEqual(node_1.prev, None)
+        self.assertEqual(node_1.next, None)
+        self.empty_list.add_in_tail(node_2)
+        self.empty_list.delete(1)
+        self.assertEqual(self.empty_list.len(), 1)
+        self.assertEqual(self.empty_list.head, node_2)
+        self.assertEqual(self.empty_list.tail, node_2)
+        self.assertEqual(node_2.prev, None)
+        self.assertEqual(node_2.next, None)
+
+
+
 
 class TestInsert(unittest.TestCase):
     def setUp(self) -> None:
