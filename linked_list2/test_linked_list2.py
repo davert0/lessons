@@ -171,6 +171,9 @@ class TestDelete(unittest.TestCase):
         self.assertEqual(self.empty_list.tail, node_1)
         self.assertEqual(node_1.prev, None)
         self.assertEqual(node_1.next, None)
+        self.assertEqual(self.empty_list.len(), 1)
+        self.assertEqual(self.empty_list.find(2), None)
+
         self.empty_list.add_in_tail(node_2)
         self.empty_list.delete(1)
         self.assertEqual(self.empty_list.len(), 1)
@@ -178,6 +181,7 @@ class TestDelete(unittest.TestCase):
         self.assertEqual(self.empty_list.tail, node_2)
         self.assertEqual(node_2.prev, None)
         self.assertEqual(node_2.next, None)
+        self.assertEqual(self.empty_list.find(1), None)
 
 
 
