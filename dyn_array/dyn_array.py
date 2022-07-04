@@ -32,9 +32,15 @@ class DynArray:
         self.count += 1
 
     def insert(self, i, itm):
+        if i < 0 or i > self.count:
+            raise IndexError('Index is out of bounds')
         if self.count == self.capacity:
             self.resize(2*self.capacity)
-        # добавляем объект itm в позицию i, начиная с 0
+        
+        for j in range(self.count-i):
+            self.array[self.count-j] = self.array[self.count-1-j]
+        self.array[i] = itm
+        self.count += 1
 
     def delete(self, i):
         ...
