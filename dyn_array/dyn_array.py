@@ -32,7 +32,8 @@ class DynArray:
         self.count += 1
 
     def insert(self, i, itm):
-        ...
+        if self.count == self.capacity:
+            self.resize(2*self.capacity)
         # добавляем объект itm в позицию i, начиная с 0
 
     def delete(self, i):
