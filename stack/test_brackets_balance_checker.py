@@ -12,4 +12,7 @@ class TestBalanceChecker(TestCase):
         self.assertEqual(check_brackets_balance("(()((())()))"), True)
         self.assertEqual(check_brackets_balance("(()((())()))"), True)
         self.assertEqual(check_brackets_balance("(()()(()"), False)
+        self.assertEqual(check_brackets_balance(")"), False)
+        self.assertEqual(check_brackets_balance("())"), False)
+        self.assertEqual(check_brackets_balance("("), False)
     
