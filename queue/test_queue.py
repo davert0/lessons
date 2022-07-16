@@ -1,5 +1,5 @@
 from unittest import TestCase
-from queue import Queue
+from queue_ import Queue
 
 class TestQueue(TestCase):
     def setUp(self) -> None:

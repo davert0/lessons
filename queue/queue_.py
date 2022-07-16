@@ -11,4 +11,4 @@ class Queue:
         return self.queue.pop()
 
     def size(self):
-        return len(self.queue) 
+        return len(self.queue)
