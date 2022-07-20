@@ -1,5 +1,6 @@
 from unittest import TestCase
 from deque_ import Deque
+from palindrome import is_palindrome
 
 class TestQueue(TestCase):
     def setUp(self) -> None:
@@ -44,3 +45,12 @@ class TestQueue(TestCase):
         self.assertEqual(1, self.deque.size())
         self.assertEqual(2, self.deque.removeTail())
         self.assertEqual(None, self.deque.removeTail())
+
+
+class TestIsPalindrome(TestCase):
+    def setUp(self) -> None:
+        self.palindromes = ["Poor Dan is in a droop.", "Sit on a potato pan, Otis.", "noon", "civic", "racecar", "level", "No lemon, no melon", "Mr. Owl ate my metal worm."]
+    
+    def test_is_palindrome(self):
+        for palindrome in self.palindromes:
+            self.assertTrue(is_palindrome(palindrome))
