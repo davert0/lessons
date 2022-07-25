@@ -77,14 +77,13 @@ class OrderedList:
         if not self.head:
             return None
 
-        while self.head.value == val:
+        if self.head.value == val:
             self.head = self.head.next
             if not self.head:
                 self.tail = None
                 return
             self.head.prev = None
-            if not all:
-                return
+            return
 
         node = self.head
         if self.head.prev:
@@ -98,8 +97,7 @@ class OrderedList:
             if node.value == val:
                 node.prev.next = node.next
                 node.next.prev = node.prev
-                if not all:
-                    return
+                return
             node = node.next
         return None
 
