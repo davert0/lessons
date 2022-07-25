@@ -66,6 +66,10 @@ class OrderedList:
         while node:
             if node.value == val:
                 return node
+            if self.asc and node.value > val:
+                return None
+            if not self.asc and node.value < val:
+                return None
             node = node.next
         return None
 
