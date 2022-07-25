@@ -70,12 +70,12 @@ class OrderedList:
         return None
 
     def delete(self, val):
-        if self.head is None:
+        if not self.head:
             return None
 
         while self.head.value == val:
             self.head = self.head.next
-            if self.head is None:
+            if not self.head:
                 self.tail = None
                 return
             self.head.prev = None
@@ -83,17 +83,19 @@ class OrderedList:
                 return
 
         node = self.head
-        if self.head.prev is not None:
+        if self.head.prev:
             self.head.prev = None
-        while node is not None:
+
+        while node:
+            if node.value == val and not node.next:
+                    self.tail = node.prev
+                    node.prev.next = None
+                    return
             if node.value == val:
                 node.prev.next = node.next
-                if node.prev.next is None:
-                    self.tail = node.prev
-                else:
-                    node.next.prev = node.prev
+                node.next.prev = node.prev
                 if not all:
-                    break
+                    return
             node = node.next
         return None
 

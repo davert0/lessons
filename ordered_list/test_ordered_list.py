@@ -9,6 +9,7 @@ class TestOrderedList(TestCase):
         self.list = OrderedList(asc=True)
         self.list_desc = OrderedList(asc=False)
 
+    # add_empty
     def test_add_to_empty_list(self):
         self.list.add(5)
         self.assertEqual(self.list.head.value, 5)
@@ -136,3 +137,75 @@ class TestOrderedList(TestCase):
         self.assertEqual(self.list_desc.len(), 7)
         self.assertEqual(self.list_desc.head.value, 10)
         self.assertEqual(self.list_desc.head.next.value, 9)
+
+
+    # delete_from_empty
+    def test_delete_value_from_empty_list(self):
+        self.assertEqual(self.list.delete(5), None)
+
+    def test_delete_from_end_asc(self):
+        self.list.add(7)
+        self.list.add(3)
+        self.list.delete(7)
+        self.assertEqual(self.list.len(), 1)
+        self.assertEqual(self.list.head.value, 3)
+        self.assertEqual(self.list.tail.value, 3)
+        self.assertEqual(self.list.head.next, None)
+        self.assertEqual(self.list.find(7), None)
+
+    def test_delete_from_start_asc(self):
+        self.list.add(7)
+        self.list.add(3)
+        self.list.delete(3)
+        self.assertEqual(self.list.len(), 1)
+        self.assertEqual(self.list.head.value, 7)
+        self.assertEqual(self.list.tail.value, 7)
+        self.assertEqual(self.list.head.next, None)
+        self.assertEqual(self.list.find(3), None)
+
+
+    def test_delete_from_end_desc(self):
+        self.list_desc.add(7)
+        self.list_desc.add(3)
+        self.list_desc.delete(3)
+        self.assertEqual(self.list_desc.len(), 1)
+        self.assertEqual(self.list_desc.head.value, 7)
+        self.assertEqual(self.list_desc.tail.value, 7)
+        self.assertEqual(self.list_desc.head.next, None)
+        self.assertEqual(self.list.find(3), None)
+
+
+    def test_delete_from_start_desc(self):
+        self.list_desc.add(7)
+        self.list_desc.add(3)
+        self.list_desc.delete(7)
+        self.assertEqual(self.list_desc.len(), 1)
+        self.assertEqual(self.list_desc.head.value, 3)
+        self.assertEqual(self.list_desc.tail.value, 3)
+        self.assertEqual(self.list_desc.head.next, None)
+        self.assertEqual(self.list.find(7), None)
+
+
+    def test_delete_from_middle_asc(self):
+        for i in range(6):
+            self.list.add(i)
+
+        self.list.delete(4)
+        self.assertEqual(self.list.len(), 5)
+        self.assertEqual(self.list.find(3).next.value, 5)
+        self.assertEqual(self.list.find(5).prev.value, 3)
+        self.assertEqual(self.list.find(4), None)
+
+
+    def test_delete_from_middle_desc(self):
+        for i in range(6):
+            self.list_desc.add(i)
+
+        self.list_desc.delete(4)
+        self.assertEqual(self.list_desc.len(), 5)
+        self.assertEqual(self.list_desc.find(3).next.value, 2)
+        self.assertEqual(self.list_desc.find(5).prev, None)
+        self.assertEqual(self.list_desc.find(5).next.value, 3)
+        self.assertEqual(self.list_desc.find(3).prev.value, 5)
+        self.assertEqual(self.list_desc.find(4), None)
+
