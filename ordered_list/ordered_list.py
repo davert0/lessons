@@ -126,6 +126,7 @@ class OrderedList:
 class OrderedStringList(OrderedList):
     def __init__(self, asc):
         super(OrderedStringList, self).__init__(asc)
+        self.__ascending = asc
 
     def compare(self, v1, v2):
         v1, v2 = str(v1).strip(), str(v2).strip()

@@ -1,5 +1,5 @@
 from unittest import TestCase
-from ordered_list import OrderedList
+from ordered_list import OrderedList, OrderedStringList
 
 # 6. Добавьте тесты для добавления, удаления и поиска элемента по его значению -- каждый случай с учётом признака упорядоченности.
 
@@ -270,3 +270,16 @@ class TestOrderedList(TestCase):
         self.assertEqual(self.list_desc.find(0).prev.value, 1)
         self.assertEqual(self.list_desc.find(1).next.value,0)
         self.assertEqual(self.list_desc.tail.value, 0)
+
+
+class TestOrderedStringList(TestCase):
+    def setUp(self) -> None:
+        self.list = OrderedStringList(asc=True)
+
+    def test_add(self):
+        self.assertEqual(self.list.head,None)
+        self.assertEqual(self.list.tail,None)
+        self.list.add('mvvmmvmv')
+        self.list.add('mvvmmvmv')
+        self.list.add('asdfasdf')
+        self.assertEqual(self.list.head.value, "asdfasdf")
