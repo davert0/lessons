@@ -1,5 +1,7 @@
 from unittest import TestCase
 from hashtable import HashTable
+import string
+import random
 
 class TestHashTable(TestCase):
     def setUp(self) -> None:
@@ -62,8 +64,35 @@ class TestHashTable(TestCase):
         self.assertEqual(self.hashtable_size_six_step_two.seek_slot('e'), None)
 
 
-    def test_find(self):
+    def test_put(self):
         self.assertEqual(self.hashtable.put("e"), 16)
         self.assertEqual(self.hashtable.find("e"), 16)
         self.assertEqual(self.hashtable.put("v"), 2)
         self.assertEqual(self.hashtable.find("v"), 2)
+        self.assertEqual(self.hashtable.put("v"), 5)
+        self.assertEqual(self.hashtable.put("v"), 8)
+        self.assertEqual(self.hashtable.put("v"), 11)
+        self.assertEqual(self.hashtable.put("v"), 14)
+        self.assertEqual(self.hashtable.put("v"), 0)
+        self.assertEqual(self.hashtable.put("v"), 3)
+        self.assertEqual(self.hashtable.put("v"), 6)
+        self.assertEqual(self.hashtable.put("v"), 9)
+        self.assertEqual(self.hashtable.put("v"), 12)
+        self.assertEqual(self.hashtable.put("v"), 15)
+        self.assertEqual(self.hashtable.put("v"), 1)
+        self.assertEqual(self.hashtable.put("v"), 4)
+        self.assertEqual(self.hashtable.put("v"), 7)
+        self.assertEqual(self.hashtable.put("v"), 10)
+        self.assertEqual(self.hashtable.put("v"), 13)
+        self.assertEqual(self.hashtable.put("v"), None)
+        self.assertEqual(self.hashtable.find("e"), 16)
+
+    def test_find(self):
+        for i in range(100):
+            random_string = ''.join(random.choices(string.ascii_uppercase + string.digits, k=25))
+            self.assertEqual(self.hashtable.put(random_string), self.hashtable.find(random_string))
+        self.assertEqual(self.hashtable.slots.count(None), 0)
+
+        for i in range(100):
+            random_string = ''.join(random.choices(string.ascii_uppercase + string.digits, k=25))
+            self.assertEqual(self.hashtable.put(random_string), self.hashtable.find(random_string))
