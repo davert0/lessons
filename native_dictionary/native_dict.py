@@ -14,7 +14,7 @@ class NativeDictionary:
 
     def is_key(self, key):
         index = self.hash_fun(key)
-        return True if self.slots[index] == key else False
+        return self.slots[index] == key
 
     def put(self, key, value):
         index = self.hash_fun(key)
