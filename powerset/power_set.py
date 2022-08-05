@@ -53,8 +53,7 @@ class PowerSet(HashTable):
         return hash(value)
 
     def size(self):
-        return 0
-        # количество элементов в множестве
+        return len(self.slots)
 
     def put(self, value):
         self.slots[value] = value
@@ -73,7 +72,6 @@ class PowerSet(HashTable):
         return intersect_set
 
     def union(self, set2):
-        # объединение текущего множества и set2
         union_set = PowerSet()
         slots = self.slots
         for slot in set2.slots:
@@ -85,12 +83,8 @@ class PowerSet(HashTable):
         difference_set = PowerSet()
         for slot in self.slots:
             if slot not in set2.slots:
-                print(slot, set2.slots)
                 difference_set.put(slot)
         return difference_set
 
     def issubset(self, set2):
-        # возвращает True, если set2 есть
-        # подмножество текущего множества,
-        # иначе False
-        return False
+        return all([slot in self.slots for slot in set2.slots])
