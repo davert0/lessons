@@ -46,8 +46,7 @@ class HashTable:
         
 class PowerSet(HashTable):
 
-    def __init__(self, sz, stp):
-        super().__init__(sz, stp)
+    def __init__(self, *args, **kwargs):
         self.slots = dict()
 
     def hash_fun(self, value):
