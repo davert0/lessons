@@ -3,7 +3,7 @@ from power_set import PowerSet
 
 class TestPowerSet(TestCase):
     def setUp(self) -> None:
-        self.set_ = PowerSet()
+        self.set_ = PowerSet(17, 3)
 
 
     def test_put(self):
