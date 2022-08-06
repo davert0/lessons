@@ -1,6 +1,3 @@
-from time import process_time_ns
-
-
 class HashTable:
     def __init__(self, sz, stp):
         self.size = sz
