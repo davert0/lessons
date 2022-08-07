@@ -49,6 +49,12 @@ class TestPowerSet(TestCase):
         set2.put("b")
         set3 = self.set_.union(set2)
         self.assertEqual({"a": "a", "b": "b", "c": "c", "d": "d", "e": "e"}, set3.slots)
+        set2 = PowerSet()
+        self.assertEqual(set2.slots, {})
+        set3 = self.set_.union(set2)
+        self.assertEqual({"a": "a", "b": "b", "c": "c"}, self.set_.slots)
+
+        self.assertEqual({"a": "a", "b": "b", "c": "c"}, set3.slots)
 
     def test_difference(self):
         self.set_.put("a")

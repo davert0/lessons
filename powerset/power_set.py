@@ -26,11 +26,12 @@ class PowerSet:
 
     def union(self, set2):
         union_set = PowerSet()
-        slots = self.slots
-        for slot in set2.slots:
-            slots[slot] = slot
-        union_set.slots = slots
+        for key in self.slots:
+            union_set.put(key)
+        for key in set2.slots:
+            union_set.put(key)
         return union_set
+
 
     def difference(self, set2):
         difference_set = PowerSet()
