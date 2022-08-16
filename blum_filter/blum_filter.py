@@ -1,11 +1,7 @@
-
-
 class BloomFilter:
-
     def __init__(self, f_len):
         self.filter_len = f_len
         self.filter = 0b0
-
 
     def hash1(self, str1):
         # 17
@@ -32,4 +28,6 @@ class BloomFilter:
     def is_value(self, str1):
         hash1 = 0b1 << self.hash1(str1)
         hash2 = 0b1 << self.hash2(str1)
-        return (self.filter | hash1) == self.filter and (self.filter | hash2) == self.filter
+        return (self.filter | hash1) == self.filter and (
+            self.filter | hash2
+        ) == self.filter

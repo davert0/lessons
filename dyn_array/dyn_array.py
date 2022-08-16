@@ -1,7 +1,7 @@
 import ctypes
 
+
 class DynArray:
-    
     def __init__(self):
         self.count = 0
         self.capacity = 16
@@ -13,9 +13,9 @@ class DynArray:
     def make_array(self, new_capacity):
         return (new_capacity * ctypes.py_object)()
 
-    def __getitem__(self,i):
+    def __getitem__(self, i):
         if i < 0 or i >= self.count:
-            raise IndexError('Index is out of bounds')
+            raise IndexError("Index is out of bounds")
         return self.array[i]
 
     def resize(self, new_capacity):
@@ -27,28 +27,28 @@ class DynArray:
 
     def append(self, itm):
         if self.count == self.capacity:
-            self.resize(2*self.capacity)
+            self.resize(2 * self.capacity)
         self.array[self.count] = itm
         self.count += 1
 
     def insert(self, i, itm):
         if i < 0 or i > self.count:
-            raise IndexError('Index is out of bounds')
+            raise IndexError("Index is out of bounds")
         if self.count == self.capacity:
-            self.resize(2*self.capacity)
-        
-        for j in range(self.count-i):
-            self.array[self.count-j] = self.array[self.count-1-j]
+            self.resize(2 * self.capacity)
+
+        for j in range(self.count - i):
+            self.array[self.count - j] = self.array[self.count - 1 - j]
         self.array[i] = itm
         self.count += 1
 
     def delete(self, i):
         if i < 0 or i >= self.count:
-            raise IndexError('Index is out of bounds')
-        for j in range(self.count-i-1):
-            self.array[i+j] = self.array[i+j+1]
+            raise IndexError("Index is out of bounds")
+        for j in range(self.count - i - 1):
+            self.array[i + j] = self.array[i + j + 1]
         self.count -= 1
-        if self.count < self.capacity/2:
-            self.capacity = int(self.capacity/1.5)
+        if self.count < self.capacity / 2:
+            self.capacity = int(self.capacity / 1.5)
         if self.capacity < 16:
             self.capacity = 16

@@ -11,7 +11,6 @@ class NativeDictionary:
             sum_bytes += byte
         return sum_bytes % self.size
 
-
     def is_key(self, key):
         index = self.hash_fun(key)
         return self.slots[index] == key

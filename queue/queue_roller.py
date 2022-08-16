@@ -1,6 +1,7 @@
 from queue_ import Queue
 import time
 
+
 def roll_queue(n: int):
     queue = Queue()
 
@@ -9,4 +10,3 @@ def roll_queue(n: int):
 
     while True:
         queue.enqueue(queue.dequeue())
-

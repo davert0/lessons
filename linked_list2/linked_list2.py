@@ -56,9 +56,9 @@ class LinkedList2:
 
         while node:
             if node.value == val and not node.next:
-                    self.tail = node.prev
-                    node.prev.next = None
-                    return
+                self.tail = node.prev
+                node.prev.next = None
+                return
             if node.value == val:
                 node.prev.next = node.next
                 node.next.prev = node.prev
@@ -95,7 +95,7 @@ class LinkedList2:
             if node == afterNode:
                 if node.next is not None:
                     node.next.prev = newNode
-                
+
                 newNode.next = node.next
                 node.next = newNode
                 newNode.prev = node

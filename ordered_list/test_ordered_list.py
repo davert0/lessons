@@ -138,7 +138,6 @@ class TestOrderedList(TestCase):
         self.assertEqual(self.list_desc.head.value, 10)
         self.assertEqual(self.list_desc.head.next.value, 9)
 
-
     # delete_from_empty
     def test_delete_value_from_empty_list(self):
         self.assertEqual(self.list.delete(5), None)
@@ -163,7 +162,6 @@ class TestOrderedList(TestCase):
         self.assertEqual(self.list.head.next, None)
         self.assertEqual(self.list.find(3), None)
 
-
     def test_delete_from_end_desc(self):
         self.list_desc.add(7)
         self.list_desc.add(3)
@@ -174,7 +172,6 @@ class TestOrderedList(TestCase):
         self.assertEqual(self.list_desc.head.next, None)
         self.assertEqual(self.list.find(3), None)
 
-
     def test_delete_from_start_desc(self):
         self.list_desc.add(7)
         self.list_desc.add(3)
@@ -184,7 +181,6 @@ class TestOrderedList(TestCase):
         self.assertEqual(self.list_desc.tail.value, 3)
         self.assertEqual(self.list_desc.head.next, None)
         self.assertEqual(self.list.find(7), None)
-
 
     def test_delete_from_middle_asc(self):
         for i in range(6):
@@ -260,7 +256,6 @@ class TestOrderedList(TestCase):
         self.assertEqual(self.list_desc.find(4).prev.value, 5)
         self.assertEqual(self.list_desc.head.value, 5)
 
-
     def test_delete_from_end_desc_same_values(self):
         for i in range(6):
             self.list_desc.add(i)
@@ -268,7 +263,7 @@ class TestOrderedList(TestCase):
         self.list_desc.delete(0)
         self.assertEqual(self.list_desc.len(), 6)
         self.assertEqual(self.list_desc.find(0).prev.value, 1)
-        self.assertEqual(self.list_desc.find(1).next.value,0)
+        self.assertEqual(self.list_desc.find(1).next.value, 0)
         self.assertEqual(self.list_desc.tail.value, 0)
 
 
@@ -277,9 +272,9 @@ class TestOrderedStringList(TestCase):
         self.list = OrderedStringList(asc=True)
 
     def test_add(self):
-        self.assertEqual(self.list.head,None)
-        self.assertEqual(self.list.tail,None)
-        self.list.add('mvvmmvmv')
-        self.list.add('mvvmmvmv')
-        self.list.add('asdfasdf')
+        self.assertEqual(self.list.head, None)
+        self.assertEqual(self.list.tail, None)
+        self.list.add("mvvmmvmv")
+        self.list.add("mvvmmvmv")
+        self.list.add("asdfasdf")
         self.assertEqual(self.list.head.value, "asdfasdf")

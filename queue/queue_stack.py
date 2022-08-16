@@ -8,7 +8,7 @@ class Queue:
 
     def dequeue(self):
         if not self.stack_1:
-             return None
+            return None
         while self.stack_1:
             self.stack_2.append(self.stack_1.pop())
         res = self.stack_2.pop()

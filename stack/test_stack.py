@@ -8,7 +8,7 @@ class TestPop(TestCase):
         self.stack = Stack()
         for i in range(5):
             self.stack.push(i)
-    
+
     def test_pop(self):
         self.assertEqual(self.stack.pop(), 4)
         self.assertEqual(self.stack.size(), 4)
@@ -21,7 +21,6 @@ class TestPop(TestCase):
         self.stack.push(5)
         self.assertEqual(self.stack.size(), 6)
         self.assertEqual(self.stack.pop(), 5)
-
 
     def test_peek(self):
         self.assertEqual(self.stack.peek(), 4)

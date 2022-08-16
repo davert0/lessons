@@ -56,7 +56,11 @@ class LinkedList:
         while node is not None:
             if node.value == val:
                 if all:
-                    prev.next = node.next if node.next is not None and node.next.value != val else prev.next
+                    prev.next = (
+                        node.next
+                        if node.next is not None and node.next.value != val
+                        else prev.next
+                    )
                     node = node.next
                     if node is None:
                         prev.next = None
@@ -69,7 +73,7 @@ class LinkedList:
                 if not all:
                     return
 
-            prev = node 
+            prev = node
             node = node.next
         return None
 

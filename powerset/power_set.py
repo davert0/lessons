@@ -32,7 +32,6 @@ class PowerSet:
             union_set.put(key)
         return union_set
 
-
     def difference(self, set2):
         difference_set = PowerSet()
         for slot in self.slots:

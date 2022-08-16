@@ -7,7 +7,7 @@ class Queue:
 
     def dequeue(self):
         if not self.queue:
-             return None
+            return None
         return self.queue.pop()
 
     def size(self):

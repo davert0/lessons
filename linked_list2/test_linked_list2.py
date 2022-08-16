@@ -38,8 +38,6 @@ class TestDelete(unittest.TestCase):
         self.assertEqual(self.full_list.tail.value, 99)
         self.assertEqual(self.full_list.head.next, self.full_list.find(2))
         self.assertEqual(self.full_list.head, self.full_list.find(2).prev)
-                
-
 
     def test_delete_one_with_full_list_from_end(self):
         self.assertEqual(self.full_list.find(99).value, 99)
@@ -88,7 +86,6 @@ class TestDelete(unittest.TestCase):
             second_99.prev,
         )
 
-
     def test_delete_all_from_beginning(self):
         for i in range(6):
             self.empty_list.add_in_tail(Node(1))
@@ -101,7 +98,6 @@ class TestDelete(unittest.TestCase):
         self.assertEqual(self.empty_list.head.value, 6)
         self.assertEqual(self.empty_list.tail.value, 7)
         self.assertEqual(self.empty_list.head.prev, None)
-
 
     def test_delete_all_in_middle(self):
         self.empty_list.add_in_tail(Node(1))
@@ -182,8 +178,6 @@ class TestDelete(unittest.TestCase):
         self.assertEqual(node_2.prev, None)
         self.assertEqual(node_2.next, None)
         self.assertEqual(self.empty_list.find(1), None)
-
-
 
 
 class TestInsert(unittest.TestCase):

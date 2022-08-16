@@ -1,6 +1,7 @@
 from unittest import TestCase
 from native_cache import NativeCache
 
+
 class TestNativeDict(TestCase):
     def setUp(self):
         self.native_cache = NativeCache(5)

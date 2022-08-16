@@ -1,8 +1,13 @@
 from deque_ import Deque
 import string
 
+
 def is_palindrome(text: str):
-    text = text.lower().replace(" ", "").translate(str.maketrans('', '', string.punctuation))
+    text = (
+        text.lower()
+        .replace(" ", "")
+        .translate(str.maketrans("", "", string.punctuation))
+    )
 
     deque_front = Deque()
     deque_back = Deque()
@@ -19,5 +24,3 @@ def is_palindrome(text: str):
         back.append(deque_back.removeTail())
 
     return back == front
-
-    

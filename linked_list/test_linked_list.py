@@ -4,10 +4,11 @@ import unittest
 from linked_list import Node, LinkedList
 from sum_lists import sum_linked_lists
 
+
 class TestDelete(unittest.TestCase):
     def setUp(self) -> None:
         self.empty_list = LinkedList()
-        
+
         self.full_list = LinkedList()
         for i in range(100):
             self.full_list.add_in_tail(Node(i))
@@ -15,7 +16,6 @@ class TestDelete(unittest.TestCase):
     def test_delete_one_with_empty_list(self):
         self.assertEqual(self.empty_list.delete(24), None)
         self.assertEqual(self.empty_list.len(), 0)
-
 
     def test_delete_one_with_full_list_from_middle(self):
         self.assertEqual(self.full_list.find(24).value, 24)
@@ -26,7 +26,6 @@ class TestDelete(unittest.TestCase):
         self.assertEqual(self.full_list.len(), 99)
         self.assertEqual(self.full_list.head.value, 0)
         self.assertEqual(self.full_list.tail.value, 99)
-
 
     def test_delete_one_with_full_list_from_beginning(self):
         self.assertEqual(self.full_list.find(0).value, 0)
@@ -54,9 +53,7 @@ class TestDelete(unittest.TestCase):
         self.assertEqual(self.empty_list.len(), 0)
         self.assertEqual(self.empty_list.head, None)
         self.assertEqual(self.empty_list.tail, None)
-       
 
-    
     def test_add_to_end_same_values_and_delete_one(self):
         for i in range(5):
             self.full_list.add_in_tail(Node(99))
@@ -66,10 +63,14 @@ class TestDelete(unittest.TestCase):
         self.full_list.delete(99)
         self.assertEqual(self.full_list.len(), 104)
         second_99 = self.full_list.find(99)
-        self.assertNotEqual(self.full_list.find(98).next, first_99,)
-        self.assertEqual(self.full_list.find(98).next, second_99,)
-
-
+        self.assertNotEqual(
+            self.full_list.find(98).next,
+            first_99,
+        )
+        self.assertEqual(
+            self.full_list.find(98).next,
+            second_99,
+        )
 
     def test_delete_all_from_beginning(self):
         for i in range(6):
@@ -83,8 +84,6 @@ class TestDelete(unittest.TestCase):
         self.assertEqual(self.empty_list.find(1), None)
         self.assertEqual(self.empty_list.head.value, 6)
 
-
-    
     def test_delete_all_from_beginning(self):
         for i in range(6):
             self.empty_list.add_in_tail(Node(1))
@@ -104,7 +103,7 @@ class TestDelete(unittest.TestCase):
         for i in range(3):
             self.empty_list.add_in_tail(Node(7))
         self.assertEqual(self.empty_list.len(), 9)
-        
+
         self.empty_list.delete(6, all=True)
         self.assertEqual(self.empty_list.len(), 4)
         self.assertEqual(self.empty_list.find(6), None)
@@ -118,7 +117,6 @@ class TestDelete(unittest.TestCase):
         for i in range(3):
             self.empty_list.add_in_tail(Node(7))
         self.assertEqual(self.empty_list.len(), 9)
-        
 
         self.empty_list.delete(7, all=True)
         self.assertEqual(self.empty_list.len(), 6)
@@ -156,10 +154,9 @@ class TestDelete(unittest.TestCase):
 
 
 class TestInsert(unittest.TestCase):
-
     def setUp(self) -> None:
         self.list_ = LinkedList()
-        
+
     def test_insert_to_empty_list(self):
         node_1 = Node(14)
         self.list_.insert(None, node_1)
@@ -188,7 +185,7 @@ class TestInsert(unittest.TestCase):
 class TestLen(unittest.TestCase):
     def setUp(self) -> None:
         self.empty_list = LinkedList()
-        
+
         self.full_list = LinkedList()
         for i in range(100):
             self.full_list.add_in_tail(Node(i))
@@ -203,7 +200,7 @@ class TestLen(unittest.TestCase):
 class TestFindAll(unittest.TestCase):
     def setUp(self) -> None:
         self.empty_list = LinkedList()
-        
+
         self.full_list = LinkedList()
         for i in range(100):
             self.full_list.add_in_tail(Node(i))
@@ -223,7 +220,7 @@ class TestFindAll(unittest.TestCase):
 class TestClean(unittest.TestCase):
     def setUp(self) -> None:
         self.empty_list = LinkedList()
-        
+
         self.full_list = LinkedList()
         for i in range(100):
             self.full_list.add_in_tail(Node(i))

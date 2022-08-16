@@ -4,20 +4,21 @@ class NativeCache:
         self.slots = [None] * self.size
         self.values = [None] * self.size
         self.hits = [0] * self.size
-    
+
     def hash_fun(self, value):
         value = value.encode("utf-8")
         sum_bytes = 0
         for byte in value:
             sum_bytes += byte
         return sum_bytes % self.size
+
     def get(self, key):
         index = self.find(key)
         if index is None:
             return None
         self.hits[index] += 1
         return self.values[index]
-        
+
     def put(self, key, value):
         index = self.seek_slot(key)
         self.slots[index] = key
