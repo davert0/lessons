@@ -5,9 +5,9 @@ class HashTable:
         self.slots = [None] * self.size
 
     def hash_fun(self, value):
-        value = value.encode("utf-8")
+        encoded_string = value.encode("utf-8")
         sum_bytes = 0
-        for byte in value:
+        for byte in encoded_string:
             sum_bytes += byte
         return sum_bytes % self.size
 
