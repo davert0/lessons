@@ -31,13 +31,13 @@ class LinkedList:
         return None
 
     def find_all(self, val):
-        res = []
+        found_nodes = []
         node = self.head
         while node is not None:
             if node.value == val:
-                res.append(node)
+                found_nodes.append(node)
             node = node.next
-        return res
+        return found_nodes
 
     def delete(self, val, all=False):
         if self.head is None:
@@ -93,16 +93,16 @@ class LinkedList:
         if self.tail is None:
             self.tail = newNode
         if afterNode is None:
-            buff = self.head
+            buffer_node = self.head
             self.head = newNode
-            self.head.next = buff
+            self.head.next = buffer_node
             return
         node = self.head
         while node is not None:
             if node == afterNode:
-                buff = node.next
+                buffer_node = node.next
                 node.next = newNode
-                newNode.next = buff
+                newNode.next = buffer_node
                 if newNode.next is None:
                     self.tail = newNode
                 return
