@@ -1,0 +1,36 @@
+1. text - prepared_text;
+// функция is_palindrome() - принимает на вход переменную text, который нужно подготовить для дальнейшего анализа.
+
+2. front - front_reading,
+back - back_reading;
+// прочтение палиндрома спереди и сзади соответственно
+
+3. value - encoded_string;
+// байтов представление строки
+
+4. res - found_nodes;
+// результат работы метода find_all()
+
+5. buff - buffer_node;
+// буфферный узел при вставке в связный список
+
+6. res - summarized_list;
+// результат работы функции sum_linked_lists()
+
+7. df - ga_report_dataframe;
+// представление отчета из GoogleAnalytics в виде pd.Dataframe
+
+8. value - exception_text;
+// текст исключения для форматируемой строки
+
+9. r - paypal_api_response;
+// результат работы requests.post()
+
+10. start - start_date;
+// дата начала
+
+11. с - paypal_client
+// клиент paypal api
+
+12. data - tables_freshness_data
+// данные по последнему обновлению табличц
