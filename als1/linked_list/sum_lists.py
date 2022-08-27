@@ -16,4 +16,3 @@ def sum_linked_lists(first_list: LinkedList, second_list: LinkedList):
         node_from_first_list = node_from_first_list.next
         node_from_second_list = node_from_second_list.next
     return summarized_list
-
