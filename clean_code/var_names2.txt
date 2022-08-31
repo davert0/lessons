@@ -1,0 +1,43 @@
+6.1.
+img - user_profile_image
+// Изображение профиля
+
+queryset - profiles_queryset
+// кверисет профилей
+
+query - dummy_wallets_table_query
+// запрос заглушка к таблице wallets
+
+bucket - s3_bucket_location
+// локация s3 бакета
+
+connection_creds - aws_connection_creds
+// креды к aws
+
+6.2
+schedule - prefect_cron_schedule
+// интервал выполнения задачи
+
+partition - partition_field
+// поле по которому проводится партицирование
+
+Auth - ApiAuthorizationSingleton
+// синглтон объекта авторизации 
+
+pattern - regexp_pattern
+// паттерн для регулярного выражения
+
+6.3
+retrain_flow_state - состояние флоу переобучения модели
+
+аттрибут self.server внутри класса SmtpServer
+
+aттрибут self.endpoint внутри класса CardsResource, который обращется к /api/cards/
+
+6.4
+
+format - datetime_format
+engine - db_engine
+session - db_session
+dtypes - data_types
+report - report_from_excel
