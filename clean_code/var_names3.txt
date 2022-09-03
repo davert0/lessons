@@ -1,0 +1,42 @@
+7.1 
+READY_FLAG - is_processing 
+// находится ли видео в обработке
+
+flag - is_clicked 
+// произошел ли клик на кнопку
+
+error - is_error
+// произошла ли ошибка
+
+empty - is_empty 
+// возвращаемый отчет пустой
+
+changed - is_changed
+// произошло ли изменение в отчете
+
+7.2
+success
+// переобчение модели завершилось успешно
+
+
+found
+// найдены ключевые слова в запросе
+
+7.3
+Использую i, j в случаях когда итереруюсь с функцией enumerate()
+В остальных случаях использую питоновский сахар for item in items
+
+7.4 
+start_date - end_date
+
+first_node - last_node
+
+3. value - encoded_string;
+// байтов представление строки
+
+7.5 
+res - found_nodes;
+// результат работы метода find_all()
+
+value - encoded_string;
+// байтовое представление строки
