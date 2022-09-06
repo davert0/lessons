@@ -1,0 +1,35 @@
+file_0 - unprocessed_file
+// необработанный файл
+
+file_1 - processed_file
+// обработанный файл
+
+message_value - message
+// значение сообщения
+
+name – model_name
+// название модели
+
+type – building_type
+// тип здания
+
+text_string – unprocessed_text
+// текстовое значение принимаемое функцией на вход
+
+average – average_rating
+// средний рейтинг
+
+max – max_length
+// максимальная длина
+
+min – min_legth
+// минимальная длина
+
+time - time_seconds
+// время в секундах
+
+price - price_rub
+// цена в рублях
+
+area - area_m2
+// площадь в квадратных метрах
