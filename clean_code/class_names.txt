@@ -1,0 +1,25 @@
+1. QuestionData - QuestionData
+
+2. WeatherInfo - Weather
+
+3. WriteRecord – RecordWriter
+
+4. MakePayment - Payment
+
+5. BigqueryManager - BigqueryClient
+
+6. fetch_dataset() - get_dataset()
+
+7. retrieve_dataset() - get_dataset()
+
+8. create() - post()
+
+9. get_many() - get_list()
+
+10. quantity – count
+
+11. update() - put()
+
+12. get_many() - get_list()
+
+
