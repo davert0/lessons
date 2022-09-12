@@ -1,0 +1,35 @@
+get_client() - get_bq_client()
+// метод создает авторизованного клиента google big query
+
+gather_dataset_table_info() - get_dataset_table_info()
+// универсальное наименование gather - get
+
+test_results() - get_dbt_tests_results()
+// получить output работы тестов dbt
+
+get_tables_age() - slack_notify_tables_age()
+// функция не возвращает значения, а отправляет сообщение в слак
+
+list_all_invoices() - get_invoices_list()
+// получить все счета
+
+migrate() - migrate_collection_to_another_instance()
+// мигригрировать таблицу между экземплярами приложения
+
+fields() - get_related_fields()
+// получить связанные поля
+
+random_token() - generate_random_token()
+// сгенерировать токен
+
+password_check() - check_password()
+// проверить пароль
+
+connection_pool_info() - get_connection_pool_info()
+// получить информацию по пулу соединений
+
+user.password() - user.change_password()
+// сменить пароль пользователя
+
+headers() - prepare_headers()
+// заголовки для http запроса
