@@ -1,0 +1,11 @@
+1. APIKeyAuthenticator(*args) - APIKeyAuthenticator.create_for_stream(*args)
+
+2. NocoClient(JWTToken) - NocoClient.create_with_JWT_auth(JWTToken)
+
+3. NocoClient(email='', password='') - NocoClient.create_with_credentials_auth(email='', password='')
+
+###
+
+NocoClient(ABC) - NocoClientRequests(NocoClient)
+
+// реализация с помощью библиотеки requests
