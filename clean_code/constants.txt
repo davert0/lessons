@@ -1,0 +1,35 @@
+LOOKBACK_PERIOD - LOOKBACK_PERIOD_HOURS
+// количество часов за которые нужно проверять обновления
+
+GOOGLE_APPLICATION_CREDENTIALS = GOOGLE_APPLICATION_CREDENTIALS_PATH
+// путь к файлу с кредами
+
+path = PROJECT_ROOT
+// абсолютный путь к корневой директории вынесен в константу
+
+slack_webhook - SLACK_WEBHOOK
+// url вебхука вынесен в константу
+
+channel_id - SLACK_CHANNEL_ID
+// id чата вынесен в константу
+
+auth_token - SLACK_AUTH_TOKEN
+//токен вынесен в константу которая получает значение из переменных окружения
+
+1000 - MAX_ROWS_COUNT
+// максимальное количество строк вынесено в константу
+
+1024 - MAX_CHUNK_SIZE
+// размер файлового чанка
+
+api_url - API_URL
+// перевод в uppercase
+
+id - GOOGLE_ANALYTICS_VIEW_ID
+// id кабинета в гугл аналитике
+
+type - DEFAULT_BUILDING_TYPE
+//дефолтный тип объекта при его создании вынесен в константу
+
+RETRY - DEFAULT_RETRY_NUM
+// дефолтное количество повторных запросов к апи
