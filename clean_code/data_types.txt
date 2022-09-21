@@ -1,0 +1,44 @@
+price_per_month = price / mortgage_term_months 
+
+if mortgage_term_months:
+    price_per_month = price / mortgage_term_months 
+
+// расчет стоимости платежа в рассрочку
+
+price_per_meter = price / area
+
+if area:
+    price_per_meter = price / area
+
+// рассчет стоимости за квадратный метр, из CRM иногда приходит значение 0
+
+
+
+building["type"] = 1 - BuildingTypes.BRICK
+// вынес тип здания в константу
+
+
+flat['status'] = 1 - FlatStatuses.SOLD
+// вынес статус квартиры в константу
+
+
+payment["status"] = 1 - PaymentStatuses.SUCCESS
+// вынес статус платежа в константу
+
+errors = errors.split("=") - num_errors = errors.split("=")
+// убрал переопределение типа - выписав значение в новую переменную
+
+if table_name in ["table1", "table2", "table3"]  - if table_name in EXCEPTIONS
+// вынес список значений в константу
+
+if val == None - if not val:
+// использование boolean типов
+
+25 - BATH_SIZE_LIMIT
+// лимит записей в запросе
+
+if table.last_updated > datetime.now() - timedelta(hours=12) = if tables_are_fresh
+// вынес условие в переменную
+
+price / months -> price // months
+// использоваине целочисленного деления
