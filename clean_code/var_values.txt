@@ -1,0 +1,82 @@
+// Хоть в python и нет явного объявления переменных, я часто использую в коде TypeHinting:
+
+password = "qwerty" -- password: str = "qwerty"
+
+price_rub = 123132 -- price_rub: int = 123123
+
+area_m = 12.5 -- area_m: float = 12.5
+
+financial_reports = get_financial_reports() -- financial_reports: pd.DataFrame = get_financial_reports()
+
+cards = client.get_cards() -- cards: list = client.get_cards()
+
+
+url = "https://example.com" -- BASE_URL = "https://example.com"
+// вынес переменную в константу
+
+message = "abc"
+... много кода
+requests.post(BASE_URL, message)
+--
+message = "abc"
+requests.post(BASE_URL, message)
+// объявление переменной перед использованием
+
+buffer = None
+... много кода
+buffer = node.next
+--- 
+buffer = None
+buffer = node.next
+// объявление буффера перед использованием
+
+
+price_per_meter = price_rub // area
+flat.update(price_per_meter=price_per_meter)
+price_per_meter = -1
+// присваивание недопустимого значения после использоваиня
+
+buffer_node = self.head
+self.head = newNode
+self.head.next = buffer_node
+buffer_node = None
+// очистка буффера после применения
+
+message = "abc"
+requests.post(BASE_URL, message)
+message = "***ERROR***"
+// присваивание недопустимого значения после использоваиня
+
+
+for i in range(len('cards')):
+    ...
+
+for i, card in enumerate(cards):
+    ...
+
+// использование enumerate для счетчика
+
+proccessed_fields = []
+... много кода
+for field in unproccessed_fields:
+    ...
+    proccessed_fields.append(processed_field)
+--
+proccessed_fields = []
+for field in unproccessed_fields:
+    ...
+    proccessed_fields.append(processed_field)
+
+// объявление переменной используемой в теле цикла перед циклом
+
+
+total = 0
+while total<20:
+    total += 1
+total = 0
+// обнуление аккумулятора после использоваиня
+
+def proccess_text(text: str):
+    if not isinstance(text, str):
+        raise ValueError("Input must be a string")
+// проверка на инвариант
