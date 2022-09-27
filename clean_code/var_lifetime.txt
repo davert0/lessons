@@ -1,0 +1,31 @@
+
+self.headers -> self._headers
+// сделал аттрибут приватным
+
+self.session -> self._session
+// сделал аттрибут приватным
+
+collection_items = source_client.collections.items(collection_id=collection_id)
+<много кода>
+for item in collection_items:
+
+collection_items = source_client.collections.items(collection_id=collection_id)
+for item in collection_items:
+// сместил объявление переменной к месту её использоваиня
+
+
+dashboard_id = ...
+for item in collections_items:
+    dashboard_id = ...
+// перенес объявление переменной внутрь цикла
+
+self.client = self._client
+// сделал аттрибут приватным
+
+self.token = self._token 
+// сделал аттрибут приватным
+
+base_url = "https://..." - > self.base_url = "https://"
+// перенес переменную из глобального неймспейса в аттрибут класса
+
+
