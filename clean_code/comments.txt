@@ -1,0 +1,22 @@
+# колекции с collection_id=None попадают в /root
+if collection_id == "root":
+    new_collection['collection_id'] = None
+
+# Check whether the provided json has the required info or not
+is_complete_json = True
+
+if not all_collections:
+    # save all cards for one default collection
+    default_collection_path = os.path.join(destination_directory, "default")
+
+# Вспомогательная функция для "отката" излишне учтённого дохода в Google Analytics
+def remove_order_from_analytics()
+
+# Проверка на то, что товары в корзине принадлежат одному региону
+add_action('woocommerce_checkout_before_customer_details')
+
+# Обновляет данные о сортировке в мета-таблице при сохранении страницы
+add_action('wp_ajax_sorting_save')
+
+# Отправляет уведомления во все системы оповещений
+def push_notification_if_payment_complete(order_id):
