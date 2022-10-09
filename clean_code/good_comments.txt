@@ -1,0 +1,43 @@
+# получить данные из BQ о состоянии таблиц
+get_bq_data
+->
+get_bq_tables_staet
+// убран комментарий, переименованна функция
+
+# Check whether the provided json has the required info or not
+is_complete_json = True
+// объяснение значения переменной
+
+# set params name in variables (will be shown in Cloud Web UI)
+# so we could access them by these keys later
+dt_start_param = 'start_date'
+dt_end_param = 'end_date'
+// объяснение назначения перменных
+
+# 's3://analytics/raw/file' → '/raw/file'
+sub_paths = [key.split(bucket_name)[-1] for key in full_paths]
+// резльтутат выражения
+
+# initiate s3 client
+s3 = boto3.resource('s3')
+// прокомментированно в связи с невыразительностью метода в библиотеке
+
+# delete files
+for filepath in sub_paths:
+    _ = s3.Object(bucket_name, filepath.lstrip('/')).delete()
+// комментарий добавляет выразительности
+
+# a datetime object representing the scheduled start time for the flow run;
+# falls back to now for unscheduled runs
+scheduled_start_time = prefect.context.get('scheduled_start_time')
+// прокомментированно значение переменной из окружения
+
+# TODO : add parameters usage
+
+# TODO: Deprecate
+
+# TODO: Initiate dataloaders separately from training.
+
+# TODO: normalize reports result
+
+# TODO: rewrite to async
