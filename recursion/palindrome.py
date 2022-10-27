@@ -1,5 +1,6 @@
 import string
 
+
 def is_palindrome(text):
 
     prepared_text = (
@@ -15,4 +16,3 @@ def is_palindrome(text):
         return False
 
     return is_palindrome(prepared_text[1:-1])
-

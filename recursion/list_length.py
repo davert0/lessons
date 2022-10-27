@@ -5,7 +5,6 @@ def get_list_length(list_: list):
     return 1 + get_list_length(list_)
 
 
-
 def get_list_length_try_except(list_: list):
     try:
         list_.pop(0)
