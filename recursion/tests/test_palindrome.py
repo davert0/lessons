@@ -3,14 +3,14 @@ from palindrome import is_palindrome
 
 def test_is_palindrome():
     palindromes = [
-        "Poor Dan is in a droop.",
-        "Sit on a potato pan, Otis.",
+        "poordanisinadroop",
+        "sitonapotatopanotis",
         "noon",
         "civic",
         "racecar",
         "level",
-        "No lemon, no melon",
-        "Mr. Owl ate my metal worm.",
+        "nolemonnomelon",
+        "mrowlatemymetalworm",
     ]
     for palindrome in palindromes:
         assert is_palindrome(palindrome) == True
