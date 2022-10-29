@@ -1,6 +1,3 @@
-import string
-
-
 def is_palindrome(text):
 
     if len(text) <= 1:
