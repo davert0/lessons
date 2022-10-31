@@ -1,4 +1,3 @@
-
 def get_max(list_: list[int]):
     if len(list_) == 1:
         return list_[0]
