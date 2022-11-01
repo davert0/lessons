@@ -5,6 +5,9 @@ def get_second_max(list_: list[int]):
         if list_[index] >= first_max:
             second_max = first_max
             first_max = list_[index]
+        elif list_[index] > second_max:
+            second_max = list_[index]
+        
         return find_second_max(index + 1, first_max, second_max)
 
     first_max, second_max = (
