@@ -10,7 +10,7 @@ from second_max import get_second_max
         ([1, 2], 1),
         ([6, 7, 7], 7),
         ([5, 6, 7], 6),
-        ([1,2,3,7,9,8], 8)
+        ([1, 2, 3, 7, 9, 8], 8),
     ],
 )
 def test_second_max(input, expected):
