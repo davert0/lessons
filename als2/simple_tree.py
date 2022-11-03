@@ -1,5 +1,4 @@
 class SimpleTreeNode:
-	
     def __init__(self, val, parent):
         self.NodeValue = val
         self.Parent = parent 
