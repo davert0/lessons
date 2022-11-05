@@ -62,6 +62,7 @@ def test_delete_node(tree_with_two_nodes, child_node):
     tree_with_two_nodes.DeleteNode(child_node)
     assert child_node.Parent == None
     assert tree_with_two_nodes.Root.Children == []
+    tree_with_two_nodes.DeleteNode(tree_with_two_nodes.Root)
 
 
 def test_get_all_nodes(tree_with_six_nodes):

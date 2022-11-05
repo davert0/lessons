@@ -10,11 +10,16 @@ class SimpleTree:
         self.Root = root
 
     def AddChild(self, ParentNode, NewChild):
-        ParentNode.Children.append(NewChild)
+        if ParentNode is None:
+            self.Root = NewChild
+        else:
+            ParentNode.Children.append(NewChild)
+            NewChild.Parent = ParentNode
 
     def DeleteNode(self, NodeToDelete):
-        NodeToDelete.Parent.Children.remove(NodeToDelete)
-        NodeToDelete.Parent = None
+        if NodeToDelete.Parent:
+            NodeToDelete.Parent.Children.remove(NodeToDelete)
+            NodeToDelete.Parent = None
 
     def GetAllNodes(self):
         def find_nodes(node):
