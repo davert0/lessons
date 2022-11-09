@@ -224,6 +224,7 @@ def test_fin_min_max():
     assert bst.FinMinMax(node_12, FindMax=True) == node_15
     assert bst.FinMinMax(node_12, FindMax=False) == node_9
 
+
 def test_delete_node_by_key():
     root = BSTNode(8, 8, None)
     node_4 = BSTNode(4, 4, root)
