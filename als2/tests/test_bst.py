@@ -129,6 +129,7 @@ def test_find():
     assert node_16_find_expected.NodeHasKey == node_16_find_expected_real.NodeHasKey
     assert node_16_find_expected.ToLeft == node_16_find_expected_real.ToLeft
 
+
 def test_add_key_value():
     root = BSTNode(8, 8, None)
     node_4 = BSTNode(4, 4, root)
@@ -142,7 +143,7 @@ def test_add_key_value():
     node_4.RightChild = node_6
 
     node_1 = BSTNode(1, 1, node_2)
-    node_3 = BSTNode(3,3, node_2)
+    node_3 = BSTNode(3, 3, node_2)
     node_2.LeftChild = node_1
     node_2.RightChild = node_3
 
@@ -179,4 +180,3 @@ def test_add_key_value():
     bst.AddKeyValue(-1, -1)
     assert bst.FindNodeByKey(-1).NodeHasKey == True
     assert bst.FindNodeByKey(-1).ToLeft == True
-    
