@@ -180,7 +180,7 @@ def test_add_key_value():
     bst.AddKeyValue(-1, -1)
     assert bst.FindNodeByKey(-1).NodeHasKey == True
     assert bst.FindNodeByKey(-1).ToLeft == True
-    
+
 
 def test_fin_min_max():
     root = BSTNode(8, 8, None)
@@ -195,7 +195,7 @@ def test_fin_min_max():
     node_4.RightChild = node_6
 
     node_1 = BSTNode(1, 1, node_2)
-    node_3 = BSTNode(3,3, node_2)
+    node_3 = BSTNode(3, 3, node_2)
     node_2.LeftChild = node_1
     node_2.RightChild = node_3
 
@@ -221,7 +221,5 @@ def test_fin_min_max():
 
     bst = BST(root)
 
-
     assert bst.FinMinMax(node_12, FindMax=True) == node_15
     assert bst.FinMinMax(node_12, FindMax=False) == node_9
-

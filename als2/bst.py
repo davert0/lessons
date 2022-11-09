@@ -66,7 +66,7 @@ class BST:
         if not child:
             return node
         return self.FinMinMax(child, FindMax)
-                
+
     def DeleteNodeByKey(self, key):
         # удаляем узел по ключу
         return False  # если узел не найден
