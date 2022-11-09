@@ -45,8 +45,18 @@ class BST:
         return result
 
     def AddKeyValue(self, key, val):
-        # добавляем ключ-значение в дерево
-        return False  # если ключ уже есть
+        find_result = self.FindNodeByKey(key)
+        if find_result.NodeHasKey:
+            return False  # если ключ уже есть
+        parent_node = find_result.Node
+        new_node = BSTNode(key, val, parent_node)
+        if not parent_node:
+            self.Root = new_node
+            return
+        if find_result.ToLeft:
+            parent_node.LeftChild = new_node
+        else:
+            parent_node.RightChild = new_node
 
     def FinMinMax(self, FromNode, FindMax):
         # ищем максимальный/минимальный ключ в поддереве
