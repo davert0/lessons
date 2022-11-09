@@ -6,6 +6,9 @@ class BSTNode:
         self.LeftChild = None  # левый потомок
         self.RightChild = None  # правый потомок
 
+    
+    def have_children(self):
+        return self.LeftChild and self.RightChild
 
 class BSTFind:  # промежуточный результат поиска
     def __init__(self):
@@ -68,8 +71,22 @@ class BST:
         return self.FinMinMax(child, FindMax)
 
     def DeleteNodeByKey(self, key):
-        # удаляем узел по ключу
-        return False  # если узел не найден
-
+        find_result = self.FindNodeByKey(key)
+        if not find_result.NodeHasKey:
+            return False
+        node_to_delete = find_result.Node
+        if not node_to_delete.have_children() and node_to_delete.Parent.LeftChild == node_to_delete:
+            node_to_delete.Parent.LeftChild = None
+            node_to_delete.Parent = None
+            return
+        if not node_to_delete.have_children() and node_to_delete.Parent.RightChild == node_to_delete:
+            node_to_delete.Parent.RightChild = None
+            node_to_delete.Parent = None
+            return
+        if node_to_delete.LeftChild and not node_to_delete.RightChild:
+            node_to_delete.LeftChild.Parent = node_to_delete.Parent
+        return
+# узлом-преемником, ключ которого -- наименьший из всех ключей, которые больше ключа удаляемого узла.
     def Count(self):
-        return 0  # количество узлов в дереве
+        if self.Root is None:
+            return 0
