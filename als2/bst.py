@@ -41,7 +41,7 @@ class BST:
                 node = node.RightChild
             if node.NodeKey < key and not node.RightChild:
                 result.Node = node
-                return result       
+                return result
         return result
 
     def AddKeyValue(self, key, val):

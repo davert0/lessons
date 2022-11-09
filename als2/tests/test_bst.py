@@ -1,6 +1,7 @@
 import pytest
 from bst import BST, BSTFind, BSTNode
 
+
 @pytest.fixture
 def tree_with_15_nodes():
     root = BSTNode(8, 8, None)
@@ -15,7 +16,7 @@ def tree_with_15_nodes():
     node_4.RightChild = node_6
 
     node_1 = BSTNode(1, 1, node_2)
-    node_3 = BSTNode(3,3, node_2)
+    node_3 = BSTNode(3, 3, node_2)
     node_2.LeftChild = node_1
     node_2.RightChild = node_3
 
@@ -53,7 +54,7 @@ def test_find():
     node_4.RightChild = node_6
 
     node_1 = BSTNode(1, 1, node_2)
-    node_3 = BSTNode(3,3, node_2)
+    node_3 = BSTNode(3, 3, node_2)
     node_2.LeftChild = node_1
     node_2.RightChild = node_3
 
@@ -87,7 +88,6 @@ def test_find():
     assert node_3_find_expected.NodeHasKey == node_3_find_real.NodeHasKey
     assert node_3_find_expected.ToLeft == node_3_find_real.ToLeft
 
-
     empty_find_expected = BSTFind()
     empty_bst = BST(None)
     empty_find_real = empty_bst.FindNodeByKey(5)
@@ -117,9 +117,10 @@ def test_find():
     node_minus_one_find_expected.ToLeft = True
     node_minus_one_find_real = bst.FindNodeByKey(-1)
     assert node_minus_one_find_expected.Node == node_minus_one_find_real.Node
-    assert node_minus_one_find_expected.NodeHasKey == node_minus_one_find_real.NodeHasKey
+    assert (
+        node_minus_one_find_expected.NodeHasKey == node_minus_one_find_real.NodeHasKey
+    )
     assert node_minus_one_find_expected.ToLeft == node_minus_one_find_real.ToLeft
-
 
     node_16_find_expected = BSTFind()
     node_16_find_expected.Node = node_15
