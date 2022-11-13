@@ -78,17 +78,19 @@ class BST:
             return None
         if key < self.Root.NodeKey:
             self.Root.LeftChild = BST(self.Root.LeftChild).DeleteNodeByKey(key)
+            if self.Root.LeftChild:
+                self.Root.LeftChild.Parent = self.Root
         elif key > self.Root.NodeKey:
             self.Root.RightChild = BST(self.Root.RightChild).DeleteNodeByKey(key)
+            if self.Root.RightChild:
+                self.Root.RightChild.Parent = self.Root
         else:
             if self.Root.LeftChild is None:
-                temp = self.Root.RightChild
-                self.Root = None
-                return temp
+                self.Root = self.Root.RightChild
+                return self.Root
             elif self.Root.RightChild is None:
-                temp = self.Root.LeftChild
-                self.root = None
-                return temp
+                self.Root = self.Root.LeftChild
+                return self.Root
 
             temp = self.FinMinMax(self.Root.RightChild, FindMax=False)
 

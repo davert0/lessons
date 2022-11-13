@@ -292,6 +292,44 @@ def test_delete_node_by_key():
     assert bst.FindNodeByKey(11).Node.RightChild is None
     assert bst.FindNodeByKey(12).Node.Parent == bst.Root
     assert bst.FindNodeByKey(4).Node.Parent == bst.Root
+    assert bst.FindNodeByKey(12).Node.LeftChild == bst.FindNodeByKey(11).Node
+    assert bst.FindNodeByKey(11).Node.Parent == bst.FindNodeByKey(12).Node
+    assert bst.FindNodeByKey(4).Node.Parent == bst.FindNodeByKey(10).Node
+    assert bst.FindNodeByKey(4).Node.LeftChild == bst.FindNodeByKey(2).Node
+    assert bst.FindNodeByKey(4).Node.RightChild == bst.FindNodeByKey(7).Node
+    assert bst.FindNodeByKey(2).Node.Parent == bst.FindNodeByKey(4).Node
+    assert bst.FindNodeByKey(7).Node.Parent == bst.FindNodeByKey(4).Node
+    bst.DeleteNodeByKey(12)
+    assert bst.FindNodeByKey(13).Node.Parent == bst.Root
+    assert bst.FindNodeByKey(13).Node.LeftChild == bst.FindNodeByKey(11).Node
+    assert bst.FindNodeByKey(13).Node.RightChild == bst.FindNodeByKey(14).Node
+    assert bst.Root.RightChild == bst.FindNodeByKey(13).Node
+    bst.DeleteNodeByKey(10)
+    assert bst.Root == bst.FindNodeByKey(11).Node
+    assert bst.Root.LeftChild == bst.FindNodeByKey(4).Node
+    assert bst.Root.RightChild == bst.FindNodeByKey(13).Node
+    bst.DeleteNodeByKey(13)
+    assert bst.Root.RightChild == bst.FindNodeByKey(14).Node
+    assert bst.FindNodeByKey(14).Node.Parent == bst.Root
+    bst.DeleteNodeByKey(4)
+    assert bst.FindNodeByKey(2).Node.Parent == bst.FindNodeByKey(7).Node
+    assert bst.FindNodeByKey(7).Node.LeftChild == bst.FindNodeByKey(2).Node
+    assert bst.Root.LeftChild == bst.FindNodeByKey(7).Node
+    bst.DeleteNodeByKey(2)
+    bst.DeleteNodeByKey(14)
+    bst.DeleteNodeByKey(11)
+
+    assert bst.Root == bst.FindNodeByKey(15).Node
+    assert bst.Root.RightChild == None
+    assert bst.Root.LeftChild == bst.FindNodeByKey(7).Node
+    bst.DeleteNodeByKey(15)
+    assert bst.Root.NodeKey == 7
+    assert bst.Root.LeftChild == None
+    assert bst.Root.RightChild == None
+    bst.DeleteNodeByKey(7)
+    assert bst.Root == None
+
+
 
 
 def test_count():
