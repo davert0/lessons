@@ -6,8 +6,8 @@ class BSTNode:
         self.LeftChild = None  # левый потомок
         self.RightChild = None  # правый потомок
 
-    def have_children(self):
-        return self.LeftChild and self.RightChild
+    def dont_have_children(self):
+        return self.LeftChild is None and self.RightChild is None
 
 
 class BSTFind:  # промежуточный результат поиска
@@ -74,26 +74,30 @@ class BST:
         find_result = self.FindNodeByKey(key)
         if not find_result.NodeHasKey:
             return False
-        node_to_delete = find_result.Node
-        if (
-            not node_to_delete.have_children()
-            and node_to_delete.Parent.LeftChild == node_to_delete
-        ):
-            node_to_delete.Parent.LeftChild = None
-            node_to_delete.Parent = None
-            return
-        if (
-            not node_to_delete.have_children()
-            and node_to_delete.Parent.RightChild == node_to_delete
-        ):
-            node_to_delete.Parent.RightChild = None
-            node_to_delete.Parent = None
-            return
-        if node_to_delete.LeftChild and not node_to_delete.RightChild:
-            node_to_delete.LeftChild.Parent = node_to_delete.Parent
-        return
+        if self.Root is None:
+            return None
+        if key < self.Root.NodeKey:
+            self.Root.LeftChild = BST(self.Root.LeftChild).DeleteNodeByKey(key)
+        elif key > self.Root.NodeKey:
+            self.Root.RightChild = BST(self.Root.RightChild).DeleteNodeByKey(key)
+        else:
+            if self.Root.LeftChild is None:
+                temp = self.Root.RightChild
+                self.Root = None
+                return temp
+            elif self.Root.RightChild is None:
+                temp = self.Root.LeftChild
+                self.root = None
+                return temp
 
-    # узлом-преемником, ключ которого -- наименьший из всех ключей, которые больше ключа удаляемого узла.
+            temp = self.FinMinMax(self.Root.RightChild, FindMax=False)
+
+            self.Root.NodeKey = temp.NodeKey
+
+            self.Root.RightChild = BST(self.Root.RightChild).DeleteNodeByKey(temp.NodeKey)
+        return self.Root
+
     def Count(self):
         if self.Root is None:
             return 0
+        return 1 + BST(self.Root.LeftChild).Count() + BST(self.Root.RightChild).Count()

@@ -269,3 +269,71 @@ def test_delete_node_by_key():
     assert not bst.FindNodeByKey(1).NodeHasKey
     bst.DeleteNodeByKey(3)
     assert not bst.FindNodeByKey(3).NodeHasKey
+    bst.DeleteNodeByKey(5)
+    assert not bst.FindNodeByKey(5).NodeHasKey
+    bst.DeleteNodeByKey(6)
+    assert not bst.FindNodeByKey(6).NodeHasKey
+    bst.DeleteNodeByKey(8)
+    assert not bst.FindNodeByKey(8).NodeHasKey
+    assert bst.Root == bst.FindNodeByKey(9).Node
+    assert bst.Root.LeftChild.NodeKey == 4
+    assert bst.Root.RightChild.NodeKey == 12
+    assert bst.Root.Parent is None
+    assert bst.FindNodeByKey(10).Node.LeftChild is None
+    assert bst.FindNodeByKey(12).Node.Parent == bst.Root
+    assert bst.FindNodeByKey(4).Node.Parent == bst.Root
+    bst.DeleteNodeByKey(9)
+    assert not bst.FindNodeByKey(9).NodeHasKey
+    assert bst.Root == bst.FindNodeByKey(10).Node
+    assert bst.Root.LeftChild.NodeKey == 4
+    assert bst.Root.RightChild.NodeKey == 12
+    assert bst.Root.Parent is None
+    assert bst.FindNodeByKey(11).Node.LeftChild is None
+    assert bst.FindNodeByKey(11).Node.RightChild is None
+    assert bst.FindNodeByKey(12).Node.Parent == bst.Root
+    assert bst.FindNodeByKey(4).Node.Parent == bst.Root
+
+def test_count():
+    root = BSTNode(8, 8, None)
+    node_4 = BSTNode(4, 4, root)
+    node_12 = BSTNode(12, 12, root)
+    root.LeftChild = node_4
+    root.RightChild = node_12
+
+    node_2 = BSTNode(2, 2, node_4)
+    node_6 = BSTNode(6, 6, node_4)
+    node_4.LeftChild = node_2
+    node_4.RightChild = node_6
+
+    node_1 = BSTNode(1, 1, node_2)
+    node_3 = BSTNode(3, 3, node_2)
+    node_2.LeftChild = node_1
+    node_2.RightChild = node_3
+
+    node_5 = BSTNode(5, 5, node_6)
+    node_7 = BSTNode(7, 7, node_6)
+    node_6.LeftChild = node_5
+    node_6.RightChild = node_7
+
+    node_10 = BSTNode(10, 10, node_12)
+    node_14 = BSTNode(14, 14, node_12)
+    node_12.LeftChild = node_10
+    node_12.RightChild = node_14
+
+    node_9 = BSTNode(9, 9, node_10)
+    node_11 = BSTNode(11, 11, node_10)
+    node_10.LeftChild = node_9
+    node_10.RightChild = node_11
+
+    node_13 = BSTNode(13, 13, node_14)
+    node_15 = BSTNode(15, 15, node_14)
+    node_14.LeftChild = node_13
+    node_14.RightChild = node_15
+
+    bst = BST(root)
+
+    assert bst.Count() == 15
+    bst.DeleteNodeByKey(1)
+    assert bst.Count() == 14
+    bst.DeleteNodeByKey(3)
+    assert bst.Count() == 13
