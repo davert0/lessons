@@ -94,7 +94,9 @@ class BST:
 
             self.Root.NodeKey = temp.NodeKey
 
-            self.Root.RightChild = BST(self.Root.RightChild).DeleteNodeByKey(temp.NodeKey)
+            self.Root.RightChild = BST(self.Root.RightChild).DeleteNodeByKey(
+                temp.NodeKey
+            )
         return self.Root
 
     def Count(self):

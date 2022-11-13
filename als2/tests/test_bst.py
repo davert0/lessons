@@ -293,6 +293,7 @@ def test_delete_node_by_key():
     assert bst.FindNodeByKey(12).Node.Parent == bst.Root
     assert bst.FindNodeByKey(4).Node.Parent == bst.Root
 
+
 def test_count():
     root = BSTNode(8, 8, None)
     node_4 = BSTNode(4, 4, root)
