@@ -330,8 +330,6 @@ def test_delete_node_by_key():
     assert bst.Root == None
 
 
-
-
 def test_count():
     root = BSTNode(8, 8, None)
     node_4 = BSTNode(4, 4, root)
