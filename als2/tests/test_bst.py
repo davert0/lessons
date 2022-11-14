@@ -19,11 +19,12 @@ def bst_full() -> BST:
     bst.AddKeyValue(7, 7)
     return bst
 
+    #         8
+    #     4         12
+    # 2       6
+    #     5       7
 
-        #         8
-        #     4         12
-        # 2       6   
-        #     5       7
+
 def test_FindNodeByKey(bst, bst_full):
     empty = BST(None)
     assert empty.FindNodeByKey(3).Node is None
@@ -36,6 +37,7 @@ def test_FindNodeByKey(bst, bst_full):
 
     assert bst.FindNodeByKey(12).Node is bst.Root
     assert not bst.FindNodeByKey(12).ToLeft
+
 
 def test_AddKeyValue_bst(bst):
     assert not bst.AddKeyValue(8, 8)

@@ -1,5 +1,4 @@
 class BSTNode:
-
     def __init__(self, key, val, parent):
         self.NodeKey = key
         self.NodeValue = val
@@ -9,7 +8,6 @@ class BSTNode:
 
 
 class BSTFind:
-
     def __init__(self):
         self.Node = None
 
@@ -18,7 +16,6 @@ class BSTFind:
 
 
 class BST:
-
     def __init__(self, node):
         self.Root = node
 
@@ -41,7 +38,9 @@ class BST:
                 found_node.NodeHasKey = True
                 return
 
-            traverseTree(node.LeftChild if key < node.NodeKey else node.RightChild, node)
+            traverseTree(
+                node.LeftChild if key < node.NodeKey else node.RightChild, node
+            )
 
         traverseTree(self.Root, None)
 
@@ -68,7 +67,10 @@ class BST:
                     node.RightChild = BSTNode(key, val, node)
                 return
 
-            traverseTree(node.LeftChild if parent_key < node.NodeKey else node.RightChild, parent_key)
+            traverseTree(
+                node.LeftChild if parent_key < node.NodeKey else node.RightChild,
+                parent_key,
+            )
 
         traverseTree(self.Root, found_node.Node.NodeKey)
 
@@ -81,6 +83,7 @@ class BST:
             return None
 
         if FromNode:
+
             def get_node(node: BSTNode):
                 if node is None:
                     return None
@@ -88,7 +91,11 @@ class BST:
                 if node.NodeKey == FromNode.NodeKey:
                     return node
 
-                return get_node(node.LeftChild if FromNode.NodeKey < node.NodeKey else node.RightChild)
+                return get_node(
+                    node.LeftChild
+                    if FromNode.NodeKey < node.NodeKey
+                    else node.RightChild
+                )
 
             node_to_start = get_node(self.Root)
 
@@ -96,7 +103,9 @@ class BST:
                 return None
 
         def traverseTree(node: BSTNode):
-            if (FindMax and node.RightChild is None) or (not FindMax and node.LeftChild is None):
+            if (FindMax and node.RightChild is None) or (
+                not FindMax and node.LeftChild is None
+            ):
                 return node
 
             return traverseTree(node.RightChild if FindMax else node.LeftChild)
@@ -104,12 +113,19 @@ class BST:
         return traverseTree(node_to_start or self.Root)
 
     def DeleteNodeByKey(self, key):
-
         def getNodeToMove(node: BSTNode):
-            if (node.LeftChild is None and node.RightChild is None) or (node.LeftChild is None and node.RightChild):
-                if node.Parent.LeftChild and node.Parent.LeftChild.NodeKey == node.NodeKey:
+            if (node.LeftChild is None and node.RightChild is None) or (
+                node.LeftChild is None and node.RightChild
+            ):
+                if (
+                    node.Parent.LeftChild
+                    and node.Parent.LeftChild.NodeKey == node.NodeKey
+                ):
                     node.Parent.LeftChild = None
-                if node.Parent.RightChild and node.Parent.RightChild.NodeKey == node.NodeKey:
+                if (
+                    node.Parent.RightChild
+                    and node.Parent.RightChild.NodeKey == node.NodeKey
+                ):
                     node.Parent.RightChild = None
                 return node
 
@@ -133,10 +149,16 @@ class BST:
                 if node.LeftChild and node.RightChild:
                     node_to_move = getNodeToMove(node.RightChild)
                     node_to_move.Parent = node.Parent
-                    if node.RightChild and node.RightChild.NodeKey != node_to_move.NodeKey:
+                    if (
+                        node.RightChild
+                        and node.RightChild.NodeKey != node_to_move.NodeKey
+                    ):
                         node_to_move.RightChild = node.RightChild
                         node_to_move.RightChild.Parent = node_to_move
-                    if node.LeftChild and node.LeftChild.NodeKey != node_to_move.NodeKey:
+                    if (
+                        node.LeftChild
+                        and node.LeftChild.NodeKey != node_to_move.NodeKey
+                    ):
                         node_to_move.LeftChild = node.LeftChild
                         node_to_move.LeftChild.Parent = node_to_move
                     if self.Root is None or self.Root.NodeKey == node.NodeKey:
@@ -168,13 +190,21 @@ class BST:
                         node.Parent.RightChild = node.LeftChild or node.RightChild
                         return True
 
-                if node.Parent.LeftChild and node.NodeKey == node.Parent.LeftChild.NodeKey:
+                if (
+                    node.Parent.LeftChild
+                    and node.NodeKey == node.Parent.LeftChild.NodeKey
+                ):
                     node.Parent.LeftChild = None
-                if node.Parent.RightChild and node.NodeKey == node.Parent.RightChild.NodeKey:
+                if (
+                    node.Parent.RightChild
+                    and node.NodeKey == node.Parent.RightChild.NodeKey
+                ):
                     node.Parent.RightChild = None
                 return True
 
-            return traverseTree(node.LeftChild if key < node.NodeKey else node.RightChild)
+            return traverseTree(
+                node.LeftChild if key < node.NodeKey else node.RightChild
+            )
 
         return traverseTree(self.Root)
 
