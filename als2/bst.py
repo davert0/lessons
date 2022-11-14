@@ -27,43 +27,55 @@ class BST:
             node.Parent = None
 
     def FindNodeByKey(self, key):
-        result = BSTFind()
-        node: BSTNode = self.Root
-        while node is not None:
+
+        found_node = BSTFind()
+
+        if self.Root is None:
+            return found_node
+
+        def traverseTree(node: BSTNode, parentNode):
+            if node is None:
+                found_node.Node = parentNode
+                found_node.NodeHasKey = False
+                found_node.ToLeft = True if key < parentNode.NodeKey else False
+                return
+
             if node.NodeKey == key:
-                result.Node = node
-                result.NodeHasKey = True
-                return result
-            elif node.NodeKey > key:
-                result.ToLeft = True
-                if node.LeftChild is None:
-                    result.Node = node
-                    return result
-                else:
-                    node = node.LeftChild
-            elif node.NodeKey < key:
-                result.ToLeft = False
-                if node.RightChild is None:
-                    result.Node = node
-                    return result
-                else:
-                    node = node.RightChild
-        return result
+                found_node.Node = node
+                found_node.NodeHasKey = True
+                return
+
+            traverseTree(node.LeftChild if key < node.NodeKey else node.RightChild, node)
+
+        traverseTree(self.Root, None)
+
+        return found_node
 
     def AddKeyValue(self, key, val):
-        # добавляем ключ-значение в дерево
-        parent_node = self.FindNodeByKey(key)
-        if parent_node.NodeHasKey:
-            return False  # если ключ уже есть
-        elif parent_node.Node is None:
-            node = BSTNode(key, val, parent_node.Node)
-            self.Root = node
+        found_node = self.FindNodeByKey(key)
+
+        if found_node.NodeHasKey:
+            return False
+
+        if self.Root is None:
+            self.Root = BSTNode(key, val, None)
             return True
-        node = BSTNode(key, val, parent_node.Node)
-        if parent_node.ToLeft:
-            parent_node.Node.LeftChild = node
-        else:
-            parent_node.Node.RightChild = node
+
+        def traverseTree(node: BSTNode, parent_key):
+            if node is None:
+                return
+
+            if node.NodeKey == parent_key:
+                if found_node.ToLeft:
+                    node.LeftChild = BSTNode(key, val, node)
+                else:
+                    node.RightChild = BSTNode(key, val, node)
+                return
+
+            traverseTree(node.LeftChild if parent_key < node.NodeKey else node.RightChild, parent_key)
+
+        traverseTree(self.Root, found_node.Node.NodeKey)
+
         return True
 
     def FinMinMax(self, FromNode, FindMax):
