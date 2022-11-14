@@ -41,147 +41,6 @@ def tree_with_15_nodes():
     node_14.RightChild = node_15
 
 
-def test_find():
-    root = BSTNode(8, 8, None)
-    node_4 = BSTNode(4, 4, root)
-    node_12 = BSTNode(12, 12, root)
-    root.LeftChild = node_4
-    root.RightChild = node_12
-
-    node_2 = BSTNode(2, 2, node_4)
-    node_6 = BSTNode(6, 6, node_4)
-    node_4.LeftChild = node_2
-    node_4.RightChild = node_6
-
-    node_1 = BSTNode(1, 1, node_2)
-    node_3 = BSTNode(3, 3, node_2)
-    node_2.LeftChild = node_1
-    node_2.RightChild = node_3
-
-    node_5 = BSTNode(5, 5, node_6)
-    node_7 = BSTNode(7, 7, node_6)
-    node_6.LeftChild = node_5
-    node_6.RightChild = node_7
-
-    node_10 = BSTNode(10, 10, node_12)
-    node_14 = BSTNode(14, 14, node_12)
-    node_12.LeftChild = node_10
-    node_12.RightChild = node_14
-
-    node_9 = BSTNode(9, 9, node_10)
-    node_11 = BSTNode(11, 11, node_10)
-    node_10.LeftChild = node_9
-    node_10.RightChild = node_11
-
-    node_13 = BSTNode(13, 13, node_14)
-    node_15 = BSTNode(15, 15, node_14)
-    node_14.LeftChild = node_13
-    node_14.RightChild = node_15
-
-    bst = BST(root)
-
-    node_3_find_expected = BSTFind()
-    node_3_find_expected.Node = node_3
-    node_3_find_expected.NodeHasKey = True
-    node_3_find_real = bst.FindNodeByKey(3)
-    assert node_3_find_expected.Node == node_3_find_real.Node
-    assert node_3_find_expected.NodeHasKey == node_3_find_real.NodeHasKey
-    assert node_3_find_expected.ToLeft == node_3_find_real.ToLeft
-
-    empty_find_expected = BSTFind()
-    empty_bst = BST(None)
-    empty_find_real = empty_bst.FindNodeByKey(5)
-    assert empty_find_expected.Node == empty_find_real.Node
-    assert empty_find_expected.NodeHasKey == empty_find_real.NodeHasKey
-    assert empty_find_expected.ToLeft == empty_find_real.ToLeft
-
-    node_3_find_expected = BSTFind()
-    node_3_find_expected.Node = node_3
-    node_3_find_expected.NodeHasKey = True
-    node_3_find_real = bst.FindNodeByKey(3)
-    assert node_3_find_expected.Node == node_3_find_real.Node
-    assert node_3_find_expected.NodeHasKey == node_3_find_real.NodeHasKey
-    assert node_3_find_expected.ToLeft == node_3_find_real.ToLeft
-
-    node_13_find_expected = BSTFind()
-    node_13_find_expected.Node = node_13
-    node_13_find_expected.NodeHasKey = True
-    node_13_find_expected.ToLeft = True
-    node_13_find_real = bst.FindNodeByKey(13)
-    assert node_13_find_expected.Node == node_13_find_real.Node
-    assert node_13_find_expected.NodeHasKey == node_13_find_real.NodeHasKey
-    assert node_13_find_expected.ToLeft == node_13_find_real.ToLeft
-
-    node_minus_one_find_expected = BSTFind()
-    node_minus_one_find_expected.Node = node_1
-    node_minus_one_find_expected.ToLeft = True
-    node_minus_one_find_real = bst.FindNodeByKey(-1)
-    assert node_minus_one_find_expected.Node == node_minus_one_find_real.Node
-    assert (
-        node_minus_one_find_expected.NodeHasKey == node_minus_one_find_real.NodeHasKey
-    )
-    assert node_minus_one_find_expected.ToLeft == node_minus_one_find_real.ToLeft
-
-    node_16_find_expected = BSTFind()
-    node_16_find_expected.Node = node_15
-    node_16_find_expected_real = bst.FindNodeByKey(16)
-    assert node_16_find_expected.Node == node_16_find_expected_real.Node
-    assert node_16_find_expected.NodeHasKey == node_16_find_expected_real.NodeHasKey
-    assert node_16_find_expected.ToLeft == node_16_find_expected_real.ToLeft
-
-
-def test_add_key_value():
-    root = BSTNode(8, 8, None)
-    node_4 = BSTNode(4, 4, root)
-    node_12 = BSTNode(12, 12, root)
-    root.LeftChild = node_4
-    root.RightChild = node_12
-
-    node_2 = BSTNode(2, 2, node_4)
-    node_6 = BSTNode(6, 6, node_4)
-    node_4.LeftChild = node_2
-    node_4.RightChild = node_6
-
-    node_1 = BSTNode(1, 1, node_2)
-    node_3 = BSTNode(3, 3, node_2)
-    node_2.LeftChild = node_1
-    node_2.RightChild = node_3
-
-    node_5 = BSTNode(5, 5, node_6)
-    node_7 = BSTNode(7, 7, node_6)
-    node_6.LeftChild = node_5
-    node_6.RightChild = node_7
-
-    node_10 = BSTNode(10, 10, node_12)
-    node_14 = BSTNode(14, 14, node_12)
-    node_12.LeftChild = node_10
-    node_12.RightChild = node_14
-
-    node_9 = BSTNode(9, 9, node_10)
-    node_11 = BSTNode(11, 11, node_10)
-    node_10.LeftChild = node_9
-    node_10.RightChild = node_11
-
-    node_13 = BSTNode(13, 13, node_14)
-    node_15 = BSTNode(15, 15, node_14)
-    node_14.LeftChild = node_13
-    node_14.RightChild = node_15
-
-    bst = BST(root)
-
-    assert bst.AddKeyValue(15, 15) == False
-
-    assert bst.FindNodeByKey(16).NodeHasKey == False
-    bst.AddKeyValue(16, 16)
-    assert bst.FindNodeByKey(16).NodeHasKey == True
-    assert bst.FindNodeByKey(16).ToLeft == False
-
-    assert bst.FindNodeByKey(-1).NodeHasKey == False
-    bst.AddKeyValue(-1, -1)
-    assert bst.FindNodeByKey(-1).NodeHasKey == True
-    assert bst.FindNodeByKey(-1).ToLeft == True
-
-
 def test_fin_min_max():
     root = BSTNode(8, 8, None)
     node_4 = BSTNode(4, 4, root)
@@ -223,111 +82,6 @@ def test_fin_min_max():
 
     assert bst.FinMinMax(node_12, FindMax=True) == node_15
     assert bst.FinMinMax(node_12, FindMax=False) == node_9
-
-
-def test_delete_node_by_key():
-    root = BSTNode(8, 8, None)
-    node_4 = BSTNode(4, 4, root)
-    node_12 = BSTNode(12, 12, root)
-    root.LeftChild = node_4
-    root.RightChild = node_12
-
-    node_2 = BSTNode(2, 2, node_4)
-    node_6 = BSTNode(6, 6, node_4)
-    node_4.LeftChild = node_2
-    node_4.RightChild = node_6
-
-    node_1 = BSTNode(1, 1, node_2)
-    node_3 = BSTNode(3, 3, node_2)
-    node_2.LeftChild = node_1
-    node_2.RightChild = node_3
-
-    node_5 = BSTNode(5, 5, node_6)
-    node_7 = BSTNode(7, 7, node_6)
-    node_6.LeftChild = node_5
-    node_6.RightChild = node_7
-
-    node_10 = BSTNode(10, 10, node_12)
-    node_14 = BSTNode(14, 14, node_12)
-    node_12.LeftChild = node_10
-    node_12.RightChild = node_14
-
-    node_9 = BSTNode(9, 9, node_10)
-    node_11 = BSTNode(11, 11, node_10)
-    node_10.LeftChild = node_9
-    node_10.RightChild = node_11
-
-    node_13 = BSTNode(13, 13, node_14)
-    node_15 = BSTNode(15, 15, node_14)
-    node_14.LeftChild = node_13
-    node_14.RightChild = node_15
-
-    bst = BST(root)
-
-    assert not bst.DeleteNodeByKey(16)
-    bst.DeleteNodeByKey(1)
-    assert not bst.FindNodeByKey(1).NodeHasKey
-    bst.DeleteNodeByKey(3)
-    assert not bst.FindNodeByKey(3).NodeHasKey
-    bst.DeleteNodeByKey(5)
-    assert not bst.FindNodeByKey(5).NodeHasKey
-    bst.DeleteNodeByKey(6)
-    assert not bst.FindNodeByKey(6).NodeHasKey
-    bst.DeleteNodeByKey(8)
-    assert not bst.FindNodeByKey(8).NodeHasKey
-    assert bst.Root == bst.FindNodeByKey(9).Node
-    assert bst.Root.LeftChild.NodeKey == 4
-    assert bst.Root.RightChild.NodeKey == 12
-    assert bst.Root.Parent is None
-    assert bst.FindNodeByKey(10).Node.LeftChild is None
-    assert bst.FindNodeByKey(12).Node.Parent == bst.Root
-    assert bst.FindNodeByKey(4).Node.Parent == bst.Root
-    bst.DeleteNodeByKey(9)
-    assert not bst.FindNodeByKey(9).NodeHasKey
-    assert bst.Root == bst.FindNodeByKey(10).Node
-    assert bst.Root.LeftChild.NodeKey == 4
-    assert bst.Root.RightChild.NodeKey == 12
-    assert bst.Root.Parent is None
-    assert bst.FindNodeByKey(11).Node.LeftChild is None
-    assert bst.FindNodeByKey(11).Node.RightChild is None
-    assert bst.FindNodeByKey(12).Node.Parent == bst.Root
-    assert bst.FindNodeByKey(4).Node.Parent == bst.Root
-    assert bst.FindNodeByKey(12).Node.LeftChild == bst.FindNodeByKey(11).Node
-    assert bst.FindNodeByKey(11).Node.Parent == bst.FindNodeByKey(12).Node
-    assert bst.FindNodeByKey(4).Node.Parent == bst.FindNodeByKey(10).Node
-    assert bst.FindNodeByKey(4).Node.LeftChild == bst.FindNodeByKey(2).Node
-    assert bst.FindNodeByKey(4).Node.RightChild == bst.FindNodeByKey(7).Node
-    assert bst.FindNodeByKey(2).Node.Parent == bst.FindNodeByKey(4).Node
-    assert bst.FindNodeByKey(7).Node.Parent == bst.FindNodeByKey(4).Node
-    bst.DeleteNodeByKey(12)
-    assert bst.FindNodeByKey(13).Node.Parent == bst.Root
-    assert bst.FindNodeByKey(13).Node.LeftChild == bst.FindNodeByKey(11).Node
-    assert bst.FindNodeByKey(13).Node.RightChild == bst.FindNodeByKey(14).Node
-    assert bst.Root.RightChild == bst.FindNodeByKey(13).Node
-    bst.DeleteNodeByKey(10)
-    assert bst.Root == bst.FindNodeByKey(11).Node
-    assert bst.Root.LeftChild == bst.FindNodeByKey(4).Node
-    assert bst.Root.RightChild == bst.FindNodeByKey(13).Node
-    bst.DeleteNodeByKey(13)
-    assert bst.Root.RightChild == bst.FindNodeByKey(14).Node
-    assert bst.FindNodeByKey(14).Node.Parent == bst.Root
-    bst.DeleteNodeByKey(4)
-    assert bst.FindNodeByKey(2).Node.Parent == bst.FindNodeByKey(7).Node
-    assert bst.FindNodeByKey(7).Node.LeftChild == bst.FindNodeByKey(2).Node
-    assert bst.Root.LeftChild == bst.FindNodeByKey(7).Node
-    bst.DeleteNodeByKey(2)
-    bst.DeleteNodeByKey(14)
-    bst.DeleteNodeByKey(11)
-
-    assert bst.Root == bst.FindNodeByKey(15).Node
-    assert bst.Root.RightChild == None
-    assert bst.Root.LeftChild == bst.FindNodeByKey(7).Node
-    bst.DeleteNodeByKey(15)
-    assert bst.Root.NodeKey == 7
-    assert bst.Root.LeftChild == None
-    assert bst.Root.RightChild == None
-    bst.DeleteNodeByKey(7)
-    assert bst.Root == None
 
 
 def test_count():
@@ -374,3 +128,152 @@ def test_count():
     assert bst.Count() == 14
     bst.DeleteNodeByKey(3)
     assert bst.Count() == 13
+
+
+import unittest
+
+class TestBST(unittest.TestCase):
+    def setUp(self):
+        self.first_node_without_parent = BSTNode(5, 'test', None)
+        self.node_with_parent = BSTNode(3, 'test3', self.first_node_without_parent)
+        self.test_node1 = BSTNode(2, 'test2', None)
+        self.test_node2 = BSTNode(8, 'test8', None)
+        self.empty_tree = BST(None)
+        self.test_tree1 = BST(self.first_node_without_parent)
+        self.test_tree2 = BST(self.node_with_parent)
+        self.full_tree = BST(self.test_node2)
+        self.full_tree.AddKeyValue(4, 'test4')
+        self.full_tree.AddKeyValue(12, 'test12')
+        self.full_tree.AddKeyValue(2, 'test2')
+        self.full_tree.AddKeyValue(6, 'test6')
+        self.full_tree.AddKeyValue(10, 'test10')
+        self.full_tree.AddKeyValue(14, 'test14')
+        self.full_tree.AddKeyValue(1, 'test1')
+        self.full_tree.AddKeyValue(3, 'test3')
+        self.full_tree.AddKeyValue(5, 'test5')
+        self.full_tree.AddKeyValue(7, 'test7')
+        self.full_tree.AddKeyValue(9, 'test9')
+        self.full_tree.AddKeyValue(11, 'test11')
+        self.full_tree.AddKeyValue(13, 'test13')
+        self.full_tree.AddKeyValue(15, 'test15')
+
+    def test_create_tree(self):
+        self.assertIsNone(self.test_tree2.Root.Parent)
+        self.assertEqual(self.test_tree1.Root, self.first_node_without_parent)
+        self.assertEqual(self.test_tree2.Count(), 1)
+        self.assertEqual(self.empty_tree.Count(), 0)
+    def test_find_node(self):
+        #Тестируем ситуацию, когда искомый узел был найден
+        self.finded_node = self.test_tree1.FindNodeByKey(5)
+        self.assertEqual(self.finded_node.Node.NodeKey, 5)
+        self.assertTrue(self.finded_node.NodeHasKey)
+        #Тестируем ситуацию, когда искомый узел не был найден и новый надо добавить вправо
+        self.find_node_to_right = self.test_tree2.FindNodeByKey(4)
+        self.assertFalse(self.find_node_to_right.NodeHasKey)
+        self.assertEqual(self.find_node_to_right.Node, self.test_tree2.Root)
+        self.assertFalse(self.find_node_to_right.ToLeft)
+        #Тестируем ситуацию, когда узел не был найден и новый надо добавить влево
+        self.find_node_to_left = self.test_tree2.FindNodeByKey(2)
+        self.assertFalse(self.find_node_to_left.NodeHasKey)
+        self.assertEqual(self.find_node_to_left.Node, self.test_tree2.Root)
+        self.assertTrue(self.find_node_to_left.ToLeft)
+    def test_add_node(self):
+        #Тестируем добавление узла левым потомком
+        self.no_element_bykey = self.test_tree1.FindNodeByKey(2)
+        self.assertFalse(self.no_element_bykey.NodeHasKey)
+        self.assertEqual(self.no_element_bykey.Node, self.test_tree1.Root)
+        self.assertTrue(self.no_element_bykey.ToLeft)
+        self.assertTrue(self.test_tree1.AddKeyValue(2, 'test2'))
+        self.added_element_bykey = self.test_tree1.FindNodeByKey(2)
+        self.assertEqual(self.added_element_bykey.Node.NodeKey, 2)
+        self.assertEqual(self.added_element_bykey.Node.Parent, self.test_tree1.Root)
+        self.assertTrue(self.added_element_bykey.NodeHasKey)
+        self.assertFalse(self.added_element_bykey.ToLeft)
+        #Тестируем добавление узла правым потомком
+        self.no_element_bykey = self.test_tree1.FindNodeByKey(7)
+        self.assertFalse(self.no_element_bykey.NodeHasKey)
+        self.assertEqual(self.no_element_bykey.Node, self.test_tree1.Root)
+        self.assertFalse(self.no_element_bykey.ToLeft)
+        self.assertTrue(self.test_tree1.AddKeyValue(7, 'test7'))
+        self.added_element_bykey = self.test_tree1.FindNodeByKey(7)
+        self.assertEqual(self.added_element_bykey.Node.NodeKey, 7)
+        self.assertEqual(self.added_element_bykey.Node.Parent, self.test_tree1.Root)
+        self.assertTrue(self.added_element_bykey.NodeHasKey)
+        self.assertFalse(self.added_element_bykey.ToLeft)
+        #Тестируем добавление первого узла в дерево
+        self.no_element_bykey = self.empty_tree.FindNodeByKey(7)
+        self.assertFalse(self.no_element_bykey.NodeHasKey)
+        self.assertEqual(self.no_element_bykey.Node, self.empty_tree.Root)
+        self.assertFalse(self.no_element_bykey.ToLeft)
+        self.assertTrue(self.empty_tree.AddKeyValue(7, 'test7'))
+        self.added_element_bykey = self.empty_tree.FindNodeByKey(7)
+        self.assertEqual(self.added_element_bykey.Node.NodeKey, 7)
+        self.assertEqual(self.added_element_bykey.Node, self.empty_tree.Root)
+        self.assertIsNone(self.empty_tree.Root.Parent)
+        self.assertTrue(self.added_element_bykey.NodeHasKey)
+        self.assertFalse(self.added_element_bykey.ToLeft)
+    def test_find_min_from_root(self):
+        self.finded_min = self.full_tree.FinMinMax(self.full_tree.Root, False)
+        self.assertEqual(self.finded_min.NodeKey, 1)
+        self.assertEqual(self.finded_min.Parent.NodeKey, 2)
+    def test_find_max_from_root(self):
+        self.finded_max = self.full_tree.FinMinMax(self.full_tree.Root, True)
+        self.assertEqual(self.finded_max.NodeKey, 15)
+        self.assertEqual(self.finded_max.Parent.NodeKey, 14)
+    def test_find_min_from_node(self):
+        self.start_node = self.full_tree.Root.RightChild
+        self.finded_min_from_node = self.full_tree.FinMinMax(self.start_node, False)
+        self.assertEqual(self.finded_min_from_node.NodeKey, 9)
+        self.assertEqual(self.finded_min_from_node.Parent.NodeKey, 10)
+    def test_find_max_from_node(self):
+        self.start_node = self.full_tree.Root.LeftChild
+        self.finded_max_from_node = self.full_tree.FinMinMax(self.start_node, True)
+        self.assertEqual(self.finded_max_from_node.NodeKey, 7)
+        self.assertEqual(self.finded_max_from_node.Parent.NodeKey, 6)
+    def test_delete_node(self):
+        self.finded_node = self.full_tree.FindNodeByKey(4)
+        self.assertEqual(self.full_tree.Root.LeftChild.NodeKey, 4)
+        self.assertTrue(self.finded_node.NodeHasKey)
+        self.assertTrue(self.full_tree.DeleteNodeByKey(4))
+        self.find_delete_node = self.full_tree.FindNodeByKey(4)
+        self.assertFalse(self.find_delete_node.NodeHasKey)
+        self.assertNotEqual(self.full_tree.Root.LeftChild.NodeKey, 4)
+        self.assertTrue(self.full_tree.DeleteNodeByKey(8))
+        self.assertTrue(self.full_tree.DeleteNodeByKey(10))
+        self.assertTrue(self.full_tree.DeleteNodeByKey(14))
+        self.assertTrue(self.full_tree.DeleteNodeByKey(12))
+        self.find_after_delete = self.full_tree.FindNodeByKey(5)
+        self.assertTrue(self.find_after_delete.NodeHasKey)
+        self.find_after_delete = self.full_tree.FindNodeByKey(1)
+        self.assertTrue(self.find_after_delete.NodeHasKey)
+        self.find_after_delete = self.full_tree.FindNodeByKey(2)
+        self.assertTrue(self.find_after_delete.NodeHasKey)
+        self.find_after_delete = self.full_tree.FindNodeByKey(3)
+        self.assertTrue(self.find_after_delete.NodeHasKey)
+        self.find_after_delete = self.full_tree.FindNodeByKey(6)
+        self.assertTrue(self.find_after_delete.NodeHasKey)
+        self.find_after_delete = self.full_tree.FindNodeByKey(7)
+        self.assertTrue(self.find_after_delete.NodeHasKey)
+        self.find_after_delete = self.full_tree.FindNodeByKey(13)
+        self.assertTrue(self.find_after_delete.NodeHasKey)
+        self.find_after_delete = self.full_tree.FindNodeByKey(12)
+        self.assertFalse(self.find_after_delete.NodeHasKey)
+        self.find_after_delete = self.full_tree.FindNodeByKey(11)
+        self.assertTrue(self.find_after_delete.NodeHasKey)
+        self.find_after_delete = self.full_tree.FindNodeByKey(14)
+        self.assertFalse(self.find_after_delete.NodeHasKey)
+        self.find_after_delete = self.full_tree.FindNodeByKey(15)
+        self.assertTrue(self.find_after_delete.NodeHasKey)
+        self.find_after_delete = self.full_tree.FindNodeByKey(10)
+        self.assertFalse(self.find_after_delete.NodeHasKey)
+        #Тестируем удаление корня
+        self.assertTrue(self.test_tree1.DeleteNodeByKey(5))
+        self.find_after_delete = self.test_tree1.FindNodeByKey(5)
+        self.assertFalse(self.find_after_delete.NodeHasKey)
+    def test_count(self):
+        self.assertEqual(self.full_tree.Count(), 15)
+        self.assertEqual(self.empty_tree.Count(), 0)
+        self.assertEqual(self.test_tree1.Count(), 1)
+        self.assertTrue(self.full_tree.DeleteNodeByKey(7))
+        self.assertEqual(self.full_tree.Count(), 14)
+ 
