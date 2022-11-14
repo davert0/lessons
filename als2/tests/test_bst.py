@@ -7,6 +7,7 @@ def bst() -> BST:
     bst = BST(BSTNode(8, 8, None))
     return bst
 
+
 @pytest.fixture
 def bst_full() -> BST:
     bst = BST(BSTNode(8, 8, None))
@@ -91,7 +92,3 @@ def test_Count(bst_full):
     assert empty.Count() == 2
 
     assert bst_full.Count() == 7
-
-
-
-
