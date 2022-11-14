@@ -25,7 +25,7 @@ class BST:
         self.Root = node  # корень дерева, или None
         if node is not None:
             node.Parent = None
-            
+
     def FindNodeByKey(self, key):
         result = BSTFind()
         node = self.Root
