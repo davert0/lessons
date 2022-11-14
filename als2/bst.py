@@ -1,30 +1,26 @@
 class BSTNode:
+
     def __init__(self, key, val, parent):
-        self.NodeKey = key  # ключ узла
-        self.NodeValue = val  # значение в узле
-        self.Parent = parent  # родитель или None для корня
-        self.LeftChild = None  # левый потомок
-        self.RightChild = None  # правый потомок
-
-    def dont_have_children(self):
-        return self.LeftChild is None and self.RightChild is None
+        self.NodeKey = key
+        self.NodeValue = val
+        self.Parent = parent
+        self.LeftChild = None
+        self.RightChild = None
 
 
-class BSTFind:  # промежуточный результат поиска
+class BSTFind:
+
     def __init__(self):
-        self.Node = None  # None если
-        # в дереве вообще нету узлов
+        self.Node = None
 
-        self.NodeHasKey = False  # True если узел найден
-        self.ToLeft = False  # True, если родительскому узлу надо
-        # добавить новый узел левым потомком
+        self.NodeHasKey = False
+        self.ToLeft = False
 
 
 class BST:
+
     def __init__(self, node):
-        self.Root = node  # корень дерева, или None
-        if node is not None:
-            node.Parent = None
+        self.Root = node
 
     def FindNodeByKey(self, key):
 
@@ -79,60 +75,120 @@ class BST:
         return True
 
     def FinMinMax(self, FromNode, FindMax):
-        node = FromNode if FromNode else self.Root
-        if not node:
-            return None
-        child = node.RightChild if FindMax else node.LeftChild
-        if not child:
-            return node
-        return self.FinMinMax(child, FindMax)
+        node_to_start = None
 
-    def recursive_delete(self, key, recursive_level):
         if self.Root is None:
-            return False
-        if key < self.Root.NodeKey:
-            self.Root.LeftChild = BST(self.Root.LeftChild).recursive_delete(
-                key, recursive_level=recursive_level + 1
-            )
-        elif key > self.Root.NodeKey:
-            self.Root.RightChild = BST(self.Root.RightChild).recursive_delete(
-                key, recursive_level=recursive_level + 1
-            )
-        else:
-            if (
-                recursive_level == 0
-                and self.Root.LeftChild is None
-                and self.Root.RightChild is None
-            ):
-                temp = self.Root
-                self.Root = None
-                return temp
-            if self.Root.LeftChild is None:
-                temp = self.Root.RightChild
-                self.Root = None
-                return temp
-            elif self.Root.RightChild is None:
-                temp = self.Root.LeftChild
-                self.Root = None
-                return temp
+            return None
 
-            temp = self.FinMinMax(self.Root.RightChild, FindMax=False)
+        if FromNode:
+            def get_node(node: BSTNode):
+                if node is None:
+                    return None
 
-            self.Root.NodeKey = temp.NodeKey
+                if node.NodeKey == FromNode.NodeKey:
+                    return node
 
-            self.Root.RightChild = BST(self.Root.RightChild).recursive_delete(
-                temp.NodeKey, recursive_level=recursive_level + 1
-            )
+                return get_node(node.LeftChild if FromNode.NodeKey < node.NodeKey else node.RightChild)
 
-        return self.Root
+            node_to_start = get_node(self.Root)
+
+            if node_to_start is None:
+                return None
+
+        def traverseTree(node: BSTNode):
+            if (FindMax and node.RightChild is None) or (not FindMax and node.LeftChild is None):
+                return node
+
+            return traverseTree(node.RightChild if FindMax else node.LeftChild)
+
+        return traverseTree(node_to_start or self.Root)
 
     def DeleteNodeByKey(self, key):
-        find_result = self.FindNodeByKey(key)
-        if not find_result.NodeHasKey:
+
+        def getNodeToMove(node: BSTNode):
+            if (node.LeftChild is None and node.RightChild is None) or (node.LeftChild is None and node.RightChild):
+                if node.Parent.LeftChild and node.Parent.LeftChild.NodeKey == node.NodeKey:
+                    node.Parent.LeftChild = None
+                if node.Parent.RightChild and node.Parent.RightChild.NodeKey == node.NodeKey:
+                    node.Parent.RightChild = None
+                return node
+
+            return getNodeToMove(node.LeftChild)
+
+        if self.Root is None:
             return False
-        return self.recursive_delete(key, 0)
+
+        if self.Root.LeftChild is None and self.Root.RightChild is None:
+            if self.Root.NodeKey == key:
+                self.Root = None
+                return True
+            if self.Root.NodeKey != key:
+                return False
+
+        def traverseTree(node: BSTNode):
+            if node is None:
+                return False
+
+            if node.NodeKey == key:
+                if node.LeftChild and node.RightChild:
+                    node_to_move = getNodeToMove(node.RightChild)
+                    node_to_move.Parent = node.Parent
+                    if node.RightChild and node.RightChild.NodeKey != node_to_move.NodeKey:
+                        node_to_move.RightChild = node.RightChild
+                        node_to_move.RightChild.Parent = node_to_move
+                    if node.LeftChild and node.LeftChild.NodeKey != node_to_move.NodeKey:
+                        node_to_move.LeftChild = node.LeftChild
+                        node_to_move.LeftChild.Parent = node_to_move
+                    if self.Root is None or self.Root.NodeKey == node.NodeKey:
+                        self.Root = node_to_move
+                        return True
+                    if node.Parent and node.Parent.LeftChild.NodeKey == node.NodeKey:
+                        node.Parent.LeftChild = node_to_move
+                        return True
+                    if node.Parent and node.Parent.RightChild.NodeKey == node.NodeKey:
+                        node.Parent.RightChild = node_to_move
+                        return True
+
+                if node.LeftChild or node.RightChild:
+                    if node.LeftChild:
+                        node.LeftChild.Parent = node.Parent
+                        if not node.Parent:
+                            self.Root = node.LeftChild
+                            return True
+                    if node.RightChild:
+                        node.RightChild.Parent = node.Parent
+                        if not node.Parent:
+                            self.Root = node.RightChild
+                            return True
+
+                    if node.Parent.LeftChild.NodeKey == node.NodeKey:
+                        node.Parent.LeftChild = node.LeftChild or node.RightChild
+                        return True
+                    if node.Parent.RightChild.NodeKey == node.NodeKey:
+                        node.Parent.RightChild = node.LeftChild or node.RightChild
+                        return True
+
+                if node.Parent.LeftChild and node.NodeKey == node.Parent.LeftChild.NodeKey:
+                    node.Parent.LeftChild = None
+                if node.Parent.RightChild and node.NodeKey == node.Parent.RightChild.NodeKey:
+                    node.Parent.RightChild = None
+                return True
+
+            return traverseTree(node.LeftChild if key < node.NodeKey else node.RightChild)
+
+        return traverseTree(self.Root)
 
     def Count(self):
-        if self.Root is None:
-            return 0
-        return 1 + BST(self.Root.LeftChild).Count() + BST(self.Root.RightChild).Count()
+        count = [0]
+
+        def traverseTree(node: BSTNode):
+            if node is None:
+                return
+
+            traverseTree(node.LeftChild)
+            count[0] += 1
+            traverseTree(node.RightChild)
+
+        traverseTree(self.Root)
+
+        return count[0]
