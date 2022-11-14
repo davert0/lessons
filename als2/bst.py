@@ -75,11 +75,19 @@ class BST:
         if self.Root is None:
             return False
         if key < self.Root.NodeKey:
-            self.Root.LeftChild = BST(self.Root.LeftChild).recursive_delete(key, recursive_level=recursive_level+1)
+            self.Root.LeftChild = BST(self.Root.LeftChild).recursive_delete(
+                key, recursive_level=recursive_level + 1
+            )
         elif key > self.Root.NodeKey:
-            self.Root.RightChild = BST(self.Root.RightChild).recursive_delete(key, recursive_level=recursive_level+1)
+            self.Root.RightChild = BST(self.Root.RightChild).recursive_delete(
+                key, recursive_level=recursive_level + 1
+            )
         else:
-            if recursive_level == 0 and self.Root.LeftChild is None and self.Root.RightChild is None:
+            if (
+                recursive_level == 0
+                and self.Root.LeftChild is None
+                and self.Root.RightChild is None
+            ):
                 temp = self.Root
                 self.Root = None
                 return temp
@@ -97,9 +105,9 @@ class BST:
             self.Root.NodeKey = temp.NodeKey
 
             self.Root.RightChild = BST(self.Root.RightChild).recursive_delete(
-                temp.NodeKey, recursive_level=recursive_level+1
+                temp.NodeKey, recursive_level=recursive_level + 1
             )
-        
+
         return self.Root
 
     def DeleteNodeByKey(self, key):
@@ -107,7 +115,6 @@ class BST:
         if not find_result.NodeHasKey:
             return False
         return self.recursive_delete(key, 0)
-
 
     def Count(self):
         if self.Root is None:
