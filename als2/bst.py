@@ -43,6 +43,7 @@ class BST:
                 result.ToLeft = False
                 node = node.RightChild
             if node.NodeKey < key and not node.RightChild:
+                result.ToLeft = False
                 result.Node = node
                 return result
         return result
@@ -55,11 +56,11 @@ class BST:
         new_node = BSTNode(key, val, parent_node)
         if not parent_node:
             self.Root = new_node
-            return
         if find_result.ToLeft:
             parent_node.LeftChild = new_node
         else:
             parent_node.RightChild = new_node
+        return new_node
 
     def FinMinMax(self, FromNode, FindMax):
         node = FromNode if FromNode else self.Root
@@ -70,36 +71,43 @@ class BST:
             return node
         return self.FinMinMax(child, FindMax)
 
-    def DeleteNodeByKey(self, key):
-        find_result = self.FindNodeByKey(key)
-        if not find_result.NodeHasKey:
-            return False
+    def recursive_delete(self, key, recursive_level):
         if self.Root is None:
-            return None
+            return False
         if key < self.Root.NodeKey:
-            self.Root.LeftChild = BST(self.Root.LeftChild).DeleteNodeByKey(key)
-            if self.Root.LeftChild:
-                self.Root.LeftChild.Parent = self.Root
+            self.Root.LeftChild = BST(self.Root.LeftChild).recursive_delete(key, recursive_level=recursive_level+1)
         elif key > self.Root.NodeKey:
-            self.Root.RightChild = BST(self.Root.RightChild).DeleteNodeByKey(key)
-            if self.Root.RightChild:
-                self.Root.RightChild.Parent = self.Root
+            self.Root.RightChild = BST(self.Root.RightChild).recursive_delete(key, recursive_level=recursive_level+1)
         else:
+            if recursive_level == 0 and self.Root.LeftChild is None and self.Root.RightChild is None:
+                temp = self.Root
+                self.Root = None
+                return temp
             if self.Root.LeftChild is None:
-                self.Root = self.Root.RightChild
-                return self.Root
+                temp = self.Root.RightChild
+                self.Root = None
+                return temp
             elif self.Root.RightChild is None:
-                self.Root = self.Root.LeftChild
-                return self.Root
+                temp = self.Root.LeftChild
+                self.Root = None
+                return temp
 
             temp = self.FinMinMax(self.Root.RightChild, FindMax=False)
 
             self.Root.NodeKey = temp.NodeKey
 
-            self.Root.RightChild = BST(self.Root.RightChild).DeleteNodeByKey(
-                temp.NodeKey
+            self.Root.RightChild = BST(self.Root.RightChild).recursive_delete(
+                temp.NodeKey, recursive_level=recursive_level+1
             )
+        
         return self.Root
+
+    def DeleteNodeByKey(self, key):
+        find_result = self.FindNodeByKey(key)
+        if not find_result.NodeHasKey:
+            return False
+        return self.recursive_delete(key, 0)
+
 
     def Count(self):
         if self.Root is None:
