@@ -25,30 +25,35 @@ class BST:
         self.Root = node  # корень дерева, или None
         if node is not None:
             node.Parent = None
-
+            
     def FindNodeByKey(self, key):
-        result = BSTFind()
-        node = self.Root
-        while node is not None:
-            if node.NodeKey == key:
-                result.Node = node
-                result.NodeHasKey = True
-                return result
-            if node.NodeKey > key and node.LeftChild:
-                result.ToLeft = False
-                node = node.LeftChild
-            if node.NodeKey > key and not node.LeftChild:
-                result.ToLeft = True
-                result.Node = node
-                return result
-            if node.NodeKey < key and node.RightChild:
-                result.ToLeft = False
-                node = node.RightChild
-            if node.NodeKey < key and not node.RightChild:
-                result.ToLeft = False
-                result.Node = node
-                return result
-        return result
+        res = BSTFind()
+        if self.Root is None:
+            res.Node = self.Root
+            res.NodeHasKey = False
+            res.ToLeft = False
+            return res
+        elif self.Root.NodeKey == key:
+            res.Node = self.Root
+            res.NodeHasKey = True
+            res.ToLeft = False
+            return res
+        elif key > self.Root.NodeKey:
+            if self.Root.RightChild is not None:
+                return BST(self.Root.RightChild).FindNodeByKey(key)
+            else:
+                res.Node = self.Root
+                res.NodeHasKey = False
+                res.ToLeft = False
+                return res
+        else:
+            if self.Root.LeftChild is not None:
+                return BST(self.Root.LeftChild).FindNodeByKey(key)
+            else:
+                res.Node = self.Root
+                res.NodeHasKey = False
+                res.ToLeft = True
+                return res
 
     def AddKeyValue(self, key, val):
         # добавляем ключ-значение в дерево

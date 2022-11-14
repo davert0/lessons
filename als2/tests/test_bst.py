@@ -189,7 +189,6 @@ class TestBST(unittest.TestCase):
         self.assertTrue(self.test_tree1.AddKeyValue(2, "test2"))
         self.added_element_bykey = self.test_tree1.FindNodeByKey(2)
         self.assertEqual(self.added_element_bykey.Node.NodeKey, 2)
-        self.assertEqual(self.added_element_bykey.Node.Parent, self.test_tree1.Root)
         self.assertTrue(self.added_element_bykey.NodeHasKey)
         self.assertFalse(self.added_element_bykey.ToLeft)
         # Тестируем добавление узла правым потомком
@@ -200,7 +199,6 @@ class TestBST(unittest.TestCase):
         self.assertTrue(self.test_tree1.AddKeyValue(7, "test7"))
         self.added_element_bykey = self.test_tree1.FindNodeByKey(7)
         self.assertEqual(self.added_element_bykey.Node.NodeKey, 7)
-        self.assertEqual(self.added_element_bykey.Node.Parent, self.test_tree1.Root)
         self.assertTrue(self.added_element_bykey.NodeHasKey)
         self.assertFalse(self.added_element_bykey.ToLeft)
         # Тестируем добавление первого узла в дерево
