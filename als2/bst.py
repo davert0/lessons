@@ -27,33 +27,28 @@ class BST:
             node.Parent = None
 
     def FindNodeByKey(self, key):
-        res = BSTFind()
-        if self.Root is None:
-            res.Node = self.Root
-            res.NodeHasKey = False
-            res.ToLeft = False
-            return res
-        elif self.Root.NodeKey == key:
-            res.Node = self.Root
-            res.NodeHasKey = True
-            res.ToLeft = False
-            return res
-        elif key > self.Root.NodeKey:
-            if self.Root.RightChild is not None:
-                return BST(self.Root.RightChild).FindNodeByKey(key)
-            else:
-                res.Node = self.Root
-                res.NodeHasKey = False
-                res.ToLeft = False
-                return res
-        else:
-            if self.Root.LeftChild is not None:
-                return BST(self.Root.LeftChild).FindNodeByKey(key)
-            else:
-                res.Node = self.Root
-                res.NodeHasKey = False
-                res.ToLeft = True
-                return res
+        result = BSTFind()
+        node: BSTNode = self.Root
+        while node is not None:
+            if node.NodeKey == key:
+                result.Node = node
+                result.NodeHasKey = True
+                return result
+            elif node.NodeKey > key:
+                result.ToLeft = True
+                if node.LeftChild is None:
+                    result.Node = node
+                    return result
+                else:
+                    node = node.LeftChild
+            elif node.NodeKey < key:
+                result.ToLeft = False
+                if node.RightChild is None:
+                    result.Node = node
+                    return result
+                else:
+                    node = node.RightChild
+        return result
 
     def AddKeyValue(self, key, val):
         # добавляем ключ-значение в дерево
