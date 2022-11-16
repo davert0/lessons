@@ -4,7 +4,6 @@ from bst import BST, BSTNode, BSTFind
 
 
 class TestBST(unittest.TestCase):
-
     def setUp(self):
         self.tree = BST(BSTNode(10, 10, None))
         self.tree_from_pic = BST(BSTNode(8, 8, None))
@@ -325,7 +324,9 @@ class TestBST(unittest.TestCase):
         self.tree.AddKeyValue(18, 18)
         self.tree.AddKeyValue(16, 16)
 
-        min_node = self.tree.FinMinMax(BSTNode(13, 13, BSTNode(12, 12, BSTNode(99, 99, None))), True)
+        min_node = self.tree.FinMinMax(
+            BSTNode(13, 13, BSTNode(12, 12, BSTNode(99, 99, None))), True
+        )
 
         self.assertEqual(14, min_node.NodeKey)
         self.assertEqual(13, min_node.Parent.NodeKey)
@@ -368,7 +369,9 @@ class TestBST(unittest.TestCase):
 
         found_new_child = self.tree.FindNodeByKey(4)
         self.assertEqual(4, found_new_child.Node.NodeKey)
-        self.assertEqual(found_node_before.Node.Parent.NodeKey, found_new_child.Node.Parent.NodeKey)
+        self.assertEqual(
+            found_node_before.Node.Parent.NodeKey, found_new_child.Node.Parent.NodeKey
+        )
         self.assertEqual(self.tree.Root.LeftChild.NodeKey, found_new_child.Node.NodeKey)
 
     def test_remove_node_with_two_children_from_tree_from_pic(self):
@@ -614,7 +617,9 @@ class TestBST(unittest.TestCase):
 
         self.assertEqual(4, self.tree.Count())
 
-    def test_delete_root_from_tree_with_multiple_levels_of_right_children_and_a_left_child(self):
+    def test_delete_root_from_tree_with_multiple_levels_of_right_children_and_a_left_child(
+        self,
+    ):
         self.tree.AddKeyValue(5, 5)
         self.tree.AddKeyValue(15, 15)
         self.tree.AddKeyValue(14, 14)
@@ -629,7 +634,9 @@ class TestBST(unittest.TestCase):
 
         self.assertEqual(5, self.tree.Count())
 
-    def test_delete_root_from_tree_with_multiple_levels_of_right_children_and_left(self):
+    def test_delete_root_from_tree_with_multiple_levels_of_right_children_and_left(
+        self,
+    ):
         self.tree.AddKeyValue(5, 5)
         self.tree.AddKeyValue(15, 15)
         self.tree.AddKeyValue(14, 14)
@@ -775,4 +782,3 @@ class TestBST(unittest.TestCase):
         self.assertEqual(len(expected), len(nodes))
         for index, node in enumerate(nodes):
             self.assertEqual(expected[index], node.NodeKey)
-
