@@ -56,10 +56,11 @@ class BST:
         new_node = BSTNode(key, val, parent_node)
         if not parent_node:
             self.Root = new_node
+            return new_node
         if find_result.ToLeft:
             parent_node.LeftChild = new_node
-        else:
-            parent_node.RightChild = new_node
+            return new_node
+        parent_node.RightChild = new_node
         return new_node
 
     def FinMinMax(self, FromNode, FindMax):
@@ -84,13 +85,15 @@ class BST:
                 self.Root = None
                 return temp
             if self.Root.LeftChild is None:
-                temp = self.Root.RightChild
-                self.Root = None
-                return temp
+                self.Root.Parent = None
+                self.Root = self.Root.RightChild
+                return self.Root
             elif self.Root.RightChild is None:
                 temp = self.Root.LeftChild
-                self.Root = None
-                return temp
+                temp.Parent = self.Root.Parent
+                self.Root.Parent = None
+                self.Root = temp
+                return self.Root
 
             temp = self.FinMinMax(self.Root.RightChild, FindMax=False)
 
