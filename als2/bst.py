@@ -103,13 +103,13 @@ class BST:
                 self.Root = None
                 return temp
             if self.Root.LeftChild is None:
-                self.Root.Parent = None
+                if self.Root.RightChild:
+                    self.Root.RightChild.Parent = self.Root.Parent
                 self.Root = self.Root.RightChild
                 return self.Root
             elif self.Root.RightChild is None:
                 temp = self.Root.LeftChild
                 temp.Parent = self.Root.Parent
-                self.Root.Parent = None
                 self.Root = temp
                 return self.Root
 
