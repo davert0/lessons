@@ -134,14 +134,13 @@ class BST:
             return 0
         return 1 + BST(self.Root.LeftChild).Count() + BST(self.Root.RightChild).Count()
 
-
     def WideAllNodes(self):
         if not self.Root:
             return ()
         queue = [self.Root]
         result = [self.Root]
         while queue:
-            node = queue.pop()        
+            node = queue.pop()
             if node.LeftChild:
                 queue.insert(0, node.LeftChild)
                 result.append(node.LeftChild)
