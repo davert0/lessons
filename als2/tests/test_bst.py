@@ -713,3 +713,28 @@ class TestBST(unittest.TestCase):
         self.tree.AddKeyValue(10, 10)
 
         self.assertEqual(6, self.tree.Count())
+
+
+
+    def test_bfs_for_empty_tree(self):
+        tree = BST(None)
+
+        self.assertEqual((), tree.WideAllNodes())
+
+    def test_bfs_for_tree_with_one_node(self):
+        tree = BST(BSTNode(10, 10, None))
+
+        nodes = tree.WideAllNodes()
+        self.assertEqual(1, len(nodes))
+        self.assertEqual(10, nodes[0].NodeKey)
+
+    def test_bfs_for_tree_from_pic(self):
+        expected = [8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13, 15]
+
+        nodes = self.tree_from_pic.WideAllNodes()
+        self.assertEqual(len(expected), len(nodes))
+        result = [node.NodeKey for node in nodes]
+        self.assertEqual(expected, result)
+
+        # for index, node in enumerate(nodes):
+        #     self.assertEqual(expected[index], node.NodeKey)
