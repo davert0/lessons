@@ -134,14 +134,13 @@ class BST:
             return 0
         return 1 + BST(self.Root.LeftChild).Count() + BST(self.Root.RightChild).Count()
 
-
     def WideAllNodes(self):
         if not self.Root:
             return ()
         queue = [self.Root]
         result = [self.Root]
         while queue:
-            node = queue.pop()        
+            node = queue.pop()
             if node.LeftChild:
                 queue.insert(0, node.LeftChild)
                 result.append(node.LeftChild)
@@ -155,14 +154,17 @@ class BST:
             return ()
         if not self.Root.LeftChild and not self.Root.RightChild:
             return (self.Root,)
-        
-        return (self.Root,) + BST(self.Root.LeftChild).WideAllNodes() + BST(self.Root.RightChild).WideAllNodes()
+
+        return (
+            (self.Root,)
+            + BST(self.Root.LeftChild).WideAllNodes()
+            + BST(self.Root.RightChild).WideAllNodes()
+        )
 
 
-
-# Этот алгоритм проверяет сначала все узлы 1-го уровня (фактически, один корень), затем все узлы второго уровня 
-# (фактически, всех наследников корня) -- слева направо, затем узлы третьего уровня (наследники всех наследников) 
-# и т. д. В зависимости от реализации дерева алгоритм может быть и итеративным, и рекурсивным -- всё зависит от того, 
+# Этот алгоритм проверяет сначала все узлы 1-го уровня (фактически, один корень), затем все узлы второго уровня
+# (фактически, всех наследников корня) -- слева направо, затем узлы третьего уровня (наследники всех наследников)
+# и т. д. В зависимости от реализации дерева алгоритм может быть и итеративным, и рекурсивным -- всё зависит от того,
 # насколько эффективно удаётся отобрать узлы N-го уровня.
 
 """

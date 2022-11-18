@@ -714,8 +714,6 @@ class TestBST(unittest.TestCase):
 
         self.assertEqual(6, self.tree.Count())
 
-
-
     def test_bfs_for_empty_tree(self):
         tree = BST(None)
 
