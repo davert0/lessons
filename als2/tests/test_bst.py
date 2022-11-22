@@ -742,7 +742,6 @@ class TestBST(unittest.TestCase):
 
         self.assertEqual(expected, result)
 
-
     def test_dfs_empty_tree(self):
         tree = BST(None)
 

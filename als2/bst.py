@@ -155,8 +155,20 @@ class BST:
         if not self.Root.LeftChild and not self.Root.RightChild:
             return (self.Root,)
         if order == 0:
-            return BST(self.Root.LeftChild).DeepAllNodes(order) + (self.Root,) + BST(self.Root.RightChild).DeepAllNodes(order)
+            return (
+                BST(self.Root.LeftChild).DeepAllNodes(order)
+                + (self.Root,)
+                + BST(self.Root.RightChild).DeepAllNodes(order)
+            )
         if order == 1:
-            return BST(self.Root.LeftChild).DeepAllNodes(order) + BST(self.Root.RightChild).DeepAllNodes(order) + (self.Root,)
+            return (
+                BST(self.Root.LeftChild).DeepAllNodes(order)
+                + BST(self.Root.RightChild).DeepAllNodes(order)
+                + (self.Root,)
+            )
         if order == 2:
-            return (self.Root,) + BST(self.Root.LeftChild).DeepAllNodes(order) + BST(self.Root.RightChild).DeepAllNodes(order)
+            return (
+                (self.Root,)
+                + BST(self.Root.LeftChild).DeepAllNodes(order)
+                + BST(self.Root.RightChild).DeepAllNodes(order)
+            )
