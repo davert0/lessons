@@ -29,4 +29,3 @@ def test_depth(input, length):
 )
 def test_find(abst, input, result):
     assert abst.FindKeyIndex(input) == result
-
