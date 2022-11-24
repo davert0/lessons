@@ -7,6 +7,8 @@ class aBST:
         self.Tree = [None] * tree_size  # массив ключей
 
     def FindKeyIndex(self, key):
+        if key is None:
+            return None
         index = 0
 
         while index < len(self.Tree):
