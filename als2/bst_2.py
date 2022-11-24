@@ -15,6 +15,8 @@ class aBST:
             node = self.Tree[index]
             if key == node:
                 return index
+            if node is None:
+                return -index
             if key < node:
                 index = 2 * index + 1
             if key > node:
