@@ -25,7 +25,8 @@ def test_depth(input, length):
 
 
 @pytest.mark.parametrize(
-    "input,result", [(50, 0), (25, 1), (75, 2), (43, 10), (92, 14), (200, None), (None, None)]
+    "input,result",
+    [(50, 0), (25, 1), (75, 2), (43, 10), (92, 14), (200, None), (None, None)],
 )
 def test_find(abst, input, result):
     assert abst.FindKeyIndex(input) == result
