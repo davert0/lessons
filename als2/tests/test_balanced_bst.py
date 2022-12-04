@@ -4,7 +4,6 @@ from balanced_bst import BalancedBST, BSTNode
 
 
 class TestBalancedBST(unittest.TestCase):
-
     def test_generate_tree_with_one_node(self):
         tree = BalancedBST().GenerateTree([1])
 
@@ -73,7 +72,6 @@ class TestBalancedBST(unittest.TestCase):
 
         self.assertTrue(balancedBst.IsBalanced(BSTNode(10, None)))
 
-
     def test_is_balanced_tree_one_level(self):
         balancedBst = BalancedBST()
         balancedBst.GenerateTree([10, 5, 15])
@@ -90,6 +88,5 @@ class TestBalancedBST(unittest.TestCase):
         new_node_2 = BSTNode(2, new_node_1)
         new_node_2.Level = 4
         new_node_1.LeftChild = new_node_2
-
 
         self.assertFalse(balancedBst.IsBalanced(BSTNode(7, None)))
