@@ -14,36 +14,25 @@ class BalancedBST:
   
     def GenerateTree(self, a):
 	# создаём дерево с нуля из неотсортированного массива a
+
         a = sorted(a)
-        middle_index = len(a)//2
-        middle_key = a[middle_index]
-        self.Root = BSTNode(middle_key, None)
-        self.generate(self.Root, a[:middle_index], 1)
-        self.generate(self.Root, a[middle_index:], 1)
+        self.generate(a, None, 0)
         return self.Root
 
-    def generate(self, parent, a, level):
+    def generate(self, a, parent, level):
         if not a:
-            return
+            return None
         if len(a) == 1:
-            node = BSTNode(a[0], parent)
-            node.Level = level
-            if node.NodeKey < parent.NodeKey:
-                parent.LeftChild = node
-            if node.NodeKey > parent.NodeKey:
-                parent.RightChild = node
-            return
+            self.Root = BSTNode(a[0], parent)
+            self.Root.Level = level
+            return self.Root
         middle_index = len(a)//2
-        middle_key = a[middle_index]
-        node = BSTNode(middle_key, parent)
-        if node.NodeKey < parent.NodeKey:
-            parent.LeftChild = node
-            print(node.NodeKey)
-        if node.NodeKey > parent.NodeKey: # 3 5 8 10 12 15 18
-            parent.RightChild = node
-        node.Level = level
-        node.LeftChild = self.generate(node, a[:middle_index], level+1)
-        node.RightChild = self.generate(node, a[middle_index:], level+1)
+        root_key = a[middle_index]
+        self.Root = BSTNode(root_key, parent)
+        self.Root.Level = level
+        self.Root.LeftChild = BalancedBST().generate(a[:middle_index], self.Root, level+1)
+        self.Root.RightChild = BalancedBST().generate(a[middle_index:], self.Root, level+1)
+        return self.Root
 
     def IsBalanced(self, root_node):
         return False
