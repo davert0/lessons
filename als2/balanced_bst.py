@@ -35,4 +35,10 @@ class BalancedBST:
         return self.Root
 
     def IsBalanced(self, root_node):
-        return False
+        if root_node.LeftChild and root_node.RightChild:
+            return True and self.IsBalanced(root_node.LeftChild) and self.IsBalanced(root_node.RightChild)
+        if root_node.LeftChild and root_node.LeftChild.LeftChild:
+            return False
+        if root_node.RightChild and root_node.RightChild.RightChild:
+            return False
+        return True
