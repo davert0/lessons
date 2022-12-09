@@ -54,12 +54,6 @@ class TestBalancedBST(unittest.TestCase):
         self.assertEqual(2, tree.RightChild.RightChild.Level)
         self.assertEqual(15, tree.RightChild.RightChild.Parent.NodeKey)
 
-    def test_is_balanced_tree_from_non_existent_node(self):
-        balancedBst = BalancedBST()
-        balancedBst.GenerateTree([10])
-
-        self.assertFalse(balancedBst.IsBalanced(BSTNode(99, None)))
-
     def test_is_balanced_tree_only_root(self):
         balancedBst = BalancedBST()
         balancedBst.GenerateTree([10])
@@ -77,16 +71,3 @@ class TestBalancedBST(unittest.TestCase):
         balancedBst.GenerateTree([10, 5, 15])
 
         self.assertTrue(balancedBst.IsBalanced(BSTNode(10, None)))
-
-    def test_is_balanced_tree_one_level_unbalanced(self):
-        balancedBst = BalancedBST()
-        balancedBst.GenerateTree([5, 7, 8, 10, 12, 15])
-        node = balancedBst.GetNode(balancedBst.Root, 5)
-        new_node_1 = BSTNode(4, node)
-        new_node_1.Level = 3
-        node.LeftChild = new_node_1
-        new_node_2 = BSTNode(2, new_node_1)
-        new_node_2.Level = 4
-        new_node_1.LeftChild = new_node_2
-
-        self.assertFalse(balancedBst.IsBalanced(BSTNode(7, None)))
