@@ -18,19 +18,19 @@ class Heap:
         if None not in self.HeapArray:
             return False
         index = self.HeapArray.index(None)
-        parent_index = (index-1)//2
+        parent_index = (index - 1) // 2
         left_child_index = 2 * index + 1
         right_child_index = 2 * index + 2
         self.HeapArray[index] = key
         if index == 0:
             return True
 
-        while self.HeapArray[index-1] is not None and key > self.HeapArray[parent_index]:
+        while (
+            self.HeapArray[index - 1] is not None and key > self.HeapArray[parent_index]
+        ):
             self.HeapArray[index] = self.HeapArray[parent_index]
             self.HeapArray[parent_index] = key
-            index = index-1
-
-        
+            index = index - 1
 
 
 """
