@@ -4,7 +4,6 @@ from heap import Heap
 
 
 class TestHeap(unittest.TestCase):
-
     def test_create_heap_empty_arr(self):
         test_arr = []
 

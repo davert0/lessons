@@ -26,7 +26,9 @@ class Heap:
     def Restruct(self, index):
         left_child_index = self.GetLeftChildIndex(index)
         right_child_index = self.GetRightChildIndex(index)
-        if left_child_index >= len(self.HeapArray) and right_child_index >= len(self.HeapArray):
+        if left_child_index >= len(self.HeapArray) and right_child_index >= len(
+            self.HeapArray
+        ):
             return
         current_element = self.HeapArray[index]
         left_child = self.HeapArray[left_child_index]
@@ -35,13 +37,18 @@ class Heap:
             return
 
         if left_child > current_element and right_child > current_element:
-            next_index = left_child_index if left_child > right_child else right_child_index
+            next_index = (
+                left_child_index if left_child > right_child else right_child_index
+            )
         if left_child > current_element > right_child:
             next_index = left_child_index
         if left_child < current_element < right_child:
             next_index = right_child_index
 
-        self.HeapArray[index], self.HeapArray[next_index] = self.HeapArray[next_index], self.HeapArray[index]
+        self.HeapArray[index], self.HeapArray[next_index] = (
+            self.HeapArray[next_index],
+            self.HeapArray[index],
+        )
 
         self.Restruct(next_index)
 
@@ -59,28 +66,34 @@ class Heap:
         self.HeapArray[index] = key
         if index == 0:
             return True
-        parent_index = (index-1)//2
+        parent_index = (index - 1) // 2
         while self.HeapArray[parent_index] < key:
             self.HeapArray[index] = self.HeapArray[parent_index]
             self.HeapArray[parent_index] = key
             index = parent_index
-            parent_index = (parent_index-1)//2
+            parent_index = (parent_index - 1) // 2
             if parent_index < 0:
                 parent_index = 0
-        
+
         current_index = self.HeapArray.index(key)
         left_child_index = 2 * current_index + 1
         right_child_index = 2 * current_index + 2
 
         try:
-            if self.HeapArray[left_child_index] is not None and self.HeapArray[left_child_index] > key:
+            if (
+                self.HeapArray[left_child_index] is not None
+                and self.HeapArray[left_child_index] > key
+            ):
                 self.HeapArray[current_index] = self.HeapArray[left_child_index]
                 self.HeapArray[left_child_index] = key
         except IndexError:
             pass
 
         try:
-            if self.HeapArray[right_child_index] is not None and self.HeapArray[right_child_index] > key:
+            if (
+                self.HeapArray[right_child_index] is not None
+                and self.HeapArray[right_child_index] > key
+            ):
                 self.HeapArray[current_index] = self.HeapArray[right_child_index]
                 self.HeapArray[right_child_index] = key
         except IndexError:
