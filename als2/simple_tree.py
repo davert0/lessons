@@ -10,11 +10,9 @@ class SimpleTree:
         self.Root = root
 
     def AddChild(self, ParentNode, NewChild):
-        if ParentNode is None:
-            self.Root = NewChild
-        else:
-            ParentNode.Children.append(NewChild)
-            NewChild.Parent = ParentNode
+        parent_node = self.FindNodesByValue(ParentNode.NodeValue)[0]
+        NewChild.Parent = parent_node
+        parent_node.Children.append(NewChild)
 
     def DeleteNode(self, NodeToDelete):
         if NodeToDelete.Parent:
@@ -54,3 +52,18 @@ class SimpleTree:
 
     def LeafCount(self):
         return len([node for node in self.GetAllNodes() if not node.Children])
+
+
+    def EvenTrees(self):
+        res = []
+        if not self.Root.Children:
+            return []
+        for child in self.Root.Children:
+            subtree = SimpleTree(child)
+            if subtree.Count() % 2 == 0:
+                res.append(subtree.Root.Parent)
+                res.append(subtree.Root)
+                res += subtree.EvenTrees()
+            else:
+                res += subtree.EvenTrees()
+        return res 
