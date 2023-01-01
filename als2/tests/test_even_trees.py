@@ -4,7 +4,6 @@ from simple_tree import SimpleTree, SimpleTreeNode
 
 
 class TestEvenTrees(unittest.TestCase):
-
     def setUp(self):
         self.tree = SimpleTree(SimpleTreeNode(1, None))
         self.tree.AddChild(SimpleTreeNode(1, None), SimpleTreeNode(2, None))
