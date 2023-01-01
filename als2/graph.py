@@ -1,6 +1,7 @@
 class Vertex:
     def __init__(self, val):
         self.Value = val
+        self.Hit = False
 
 
 class SimpleGraph:
@@ -31,3 +32,21 @@ class SimpleGraph:
     def RemoveEdge(self, v1, v2):
         self.m_adjacency[v1][v2] = 0
         self.m_adjacency[v2][v1] = 0
+
+    def DepthFirstSearch(self, VFrom, VTo):
+        # узлы задаются позициями в списке vertex
+        # возвращается список узлов -- путь из VFrom в VTo
+        # или [] если пути нету
+        stack = []
+        current_vertex = self.vertex[VFrom]
+        current_vertex.Hit = True
+        stack.append(current_vertex)
+        for i in self.m_adjacency[VFrom]:
+            if i == 1 and self.vertex[i] == self.vertex[VTo]:
+                stack.append(self.vertex[VTo])
+                return stack
+        for i in self.m_adjacency[VFrom]:
+            if i == 1 and self.vertex[i].Hit == False:
+                return stack + self.DepthFirstSearch(VFrom=i, VTo=VTo)
+        stack.pop()
+        return stack

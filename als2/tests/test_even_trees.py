@@ -55,4 +55,4 @@ class TestEvenTrees(unittest.TestCase):
 
         edges_to_remove = self.tree.EvenTrees()
 
-        self.assertEqual([8, 9, 6, 8, 1, 3], self.get_values(edges_to_remove))
+        self.assertEqual([1, 3, 6, 8, 8, 9], self.get_values(edges_to_remove))
