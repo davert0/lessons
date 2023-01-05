@@ -6,7 +6,6 @@ class Vertex:
 
 
 class SimpleGraph:
-
     def __init__(self, size):
         self.max_vertex = size
         self.m_adjacency = [[0] * size for _ in range(size)]

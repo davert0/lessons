@@ -1,6 +1,7 @@
 from graph import SimpleGraph, Vertex
 import pytest
 
+
 @pytest.fixture
 def full_graph_no_edges() -> SimpleGraph:
     graph = SimpleGraph(5)
@@ -10,6 +11,7 @@ def full_graph_no_edges() -> SimpleGraph:
     graph.AddVertex(Vertex("D"))
     graph.AddVertex(Vertex("E"))
     return graph
+
 
 @pytest.fixture
 def full_graph(full_graph_no_edges: SimpleGraph):
