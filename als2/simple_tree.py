@@ -53,6 +53,7 @@ class SimpleTree:
     def LeafCount(self):
         return len([node for node in self.GetAllNodes() if not node.Children])
 
+
     def EvenTrees(self):
         res = []
         if not self.Root.Children:
@@ -65,4 +66,4 @@ class SimpleTree:
                 res += subtree.EvenTrees()
             else:
                 res += subtree.EvenTrees()
-        return res
+        return res 
