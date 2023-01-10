@@ -90,5 +90,5 @@ class SimpleGraph:
         if current_vertex == self.vertex[VTo]:
             return [1] # TODO добавить формирование пути
         for edge in self.m_adjacency[VFrom]:
-            print(123)
+            ...
         return []

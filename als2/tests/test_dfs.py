@@ -29,4 +29,5 @@ def full_graph(full_graph_no_edges: SimpleGraph):
 #     assert [0, 1, 4] == [vertex.Index for vertex in path]
 
 def test_bfs(full_graph: SimpleGraph):
-    ...
+    path = full_graph.BreadthFirstSearch(0, 4)
+    assert ["A", "B", "E"] == [vertex.Value for vertex in path]
