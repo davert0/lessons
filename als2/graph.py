@@ -12,6 +12,7 @@ class SimpleGraph:
         self.m_adjacency = [[0] * size for _ in range(size)]
         self.vertex = [None] * size
         self.stack = []
+        self.queue = []
 
     def AddVertex(self, v):
         vertex = Vertex(v)
@@ -39,12 +40,15 @@ class SimpleGraph:
         self.m_adjacency[v2][v1] = 0
 
     def DepthFirstSearch(self, VFrom, VTo):
+        self.CleanUp()
+        self.SearchGraph(VFrom, VTo, False)
+        return self.stack
+
+    def CleanUp(self):
         self.stack = []
         for vertex in self.vertex:
             vertex.hit = False
-        self.SearchGraph(VFrom, VTo, False)
-
-        return self.stack
+        self.queue = []
 
     def SearchGraph(self, VFrom, VTo, IsOnStack):
         vertex = self.vertex[VFrom]
@@ -78,3 +82,13 @@ class SimpleGraph:
         for index, value in enumerate(self.vertex):
             if value.Value == self.stack[-1].Value:
                 return index, True
+
+    def BreadthFirstSearch(self, VFrom, VTo):
+        self.CleanUp()
+        current_vertex = self.vertex[VFrom]
+        current_vertex.Hit = True
+        if current_vertex == self.vertex[VTo]:
+            return [1] # TODO добавить формирование пути
+        for edge in self.m_adjacency[VFrom]:
+            print(123)
+        return []

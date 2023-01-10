@@ -27,3 +27,6 @@ def full_graph(full_graph_no_edges: SimpleGraph):
 # def test_dfs_0_4(full_graph: SimpleGraph):
 #     path: list = full_graph.DepthFirstSearch(0, 4)
 #     assert [0, 1, 4] == [vertex.Index for vertex in path]
+
+def test_bfs(full_graph: SimpleGraph):
+    ...
