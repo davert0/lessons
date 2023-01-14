@@ -5,11 +5,11 @@ import pytest
 @pytest.fixture
 def full_graph_no_edges() -> SimpleGraph:
     graph = SimpleGraph(5)
-    graph.AddVertex(Vertex("A"))
-    graph.AddVertex(Vertex("B"))
-    graph.AddVertex(Vertex("C"))
-    graph.AddVertex(Vertex("D"))
-    graph.AddVertex(Vertex("E"))
+    graph.AddVertex(("A"))
+    graph.AddVertex(("B"))
+    graph.AddVertex(("C"))
+    graph.AddVertex(("D"))
+    graph.AddVertex(("E"))
     return graph
 
 
@@ -30,6 +30,14 @@ def full_graph(full_graph_no_edges: SimpleGraph):
 #     path: list = full_graph.DepthFirstSearch(0, 4)
 #     assert [0, 1, 4] == [vertex.Index for vertex in path]
 
+
+def test_bfs_adjacent(full_graph: SimpleGraph):
+    path = full_graph.BreadthFirstSearch(0, 1)
+    assert ["A", "B"] == [vertex.Value for vertex in path]
+
+
 def test_bfs(full_graph: SimpleGraph):
     path = full_graph.BreadthFirstSearch(0, 4)
-    assert ["A", "B", "E"] == [vertex.Value for vertex in path]
+    assert ["A", "D", "E"] == [vertex.Value for vertex in path]
+
+

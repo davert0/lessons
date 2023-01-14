@@ -1,5 +1,5 @@
 class Vertex:
-    hit = False
+    Hit = False
 
     def __init__(self, val):
         self.Value = val
@@ -11,7 +11,6 @@ class SimpleGraph:
         self.m_adjacency = [[0] * size for _ in range(size)]
         self.vertex = [None] * size
         self.stack = []
-        self.queue = []
 
     def AddVertex(self, v):
         vertex = Vertex(v)
@@ -83,11 +82,15 @@ class SimpleGraph:
                 return index, True
 
     def BreadthFirstSearch(self, VFrom, VTo):
-        self.CleanUp()
-        current_vertex = self.vertex[VFrom]
-        current_vertex.Hit = True
-        if current_vertex == self.vertex[VTo]:
-            return [1] # TODO добавить формирование пути
-        for edge in self.m_adjacency[VFrom]:
-            ...
+        queue = [(VFrom, [self.vertex[VFrom]])]
+        visited = set()
+        while queue:
+            vertex, path = queue.pop()
+            for index, isEdge in enumerate(self.m_adjacency[vertex]):
+                if index == VTo and isEdge == 1:
+                    return path + [self.vertex[VTo]]
+                if index not in visited and isEdge == 1:
+                    visited.add(index)
+                    queue.append((index, path+[self.vertex[index]]))
+
         return []
