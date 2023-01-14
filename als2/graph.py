@@ -91,6 +91,6 @@ class SimpleGraph:
                     return path + [self.vertex[VTo]]
                 if index not in visited and isEdge == 1:
                     visited.add(index)
-                    queue.append((index, path+[self.vertex[index]]))
+                    queue.append((index, path + [self.vertex[index]]))
 
         return []

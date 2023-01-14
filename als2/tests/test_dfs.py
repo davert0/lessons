@@ -39,5 +39,3 @@ def test_bfs_adjacent(full_graph: SimpleGraph):
 def test_bfs(full_graph: SimpleGraph):
     path = full_graph.BreadthFirstSearch(0, 4)
     assert ["A", "D", "E"] == [vertex.Value for vertex in path]
-
-
