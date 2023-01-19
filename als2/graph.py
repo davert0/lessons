@@ -96,13 +96,15 @@ class SimpleGraph:
 
     def WeakVertices(self):
         """
-        Некоторая вершина графа считается принадлежащей треугольнику, 
-        если среди её прямых вершин-соседей (с которыми она связана рёбрами) 
+        Некоторая вершина графа считается принадлежащей треугольнику,
+        если среди её прямых вершин-соседей (с которыми она связана рёбрами)
         имеются хотя бы две вершины, связанные ребром друг с другом.
         """
         weak_vertices = []
         for i in range(len(self.m_adjacency)):
-            adjacents = [i for i, isEdge in enumerate(self.m_adjacency[i]) if isEdge == 1]
+            adjacents = [
+                i for i, isEdge in enumerate(self.m_adjacency[i]) if isEdge == 1
+            ]
             linked = []
             while adjacents:
                 to_compare = adjacents.pop()

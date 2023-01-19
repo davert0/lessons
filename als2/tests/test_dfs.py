@@ -25,6 +25,7 @@ def full_graph(full_graph_no_edges: SimpleGraph):
     full_graph_no_edges.AddEdge(3, 4)
     return full_graph_no_edges
 
+
 @pytest.fixture
 def graph_with_weak_vertex(full_graph: SimpleGraph):
     full_graph.AddVertex("F")
@@ -40,6 +41,7 @@ def test_bfs_adjacent(full_graph: SimpleGraph):
 def test_bfs(full_graph: SimpleGraph):
     path = full_graph.BreadthFirstSearch(0, 4)
     assert ["A", "D", "E"] == [vertex.Value for vertex in path]
+
 
 def test_weak_vertices(graph_with_weak_vertex: SimpleGraph):
     weaks = graph_with_weak_vertex.WeakVertices()
