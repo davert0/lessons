@@ -92,5 +92,24 @@ class SimpleGraph:
                 if index not in visited and isEdge == 1:
                     visited.add(index)
                     queue.append((index, path + [self.vertex[index]]))
-
         return []
+
+    def WeakVertices(self):
+        """
+        Некоторая вершина графа считается принадлежащей треугольнику, 
+        если среди её прямых вершин-соседей (с которыми она связана рёбрами) 
+        имеются хотя бы две вершины, связанные ребром друг с другом.
+        """
+        weak_vertices = []
+        for i in range(len(self.m_adjacency)):
+            adjacents = [i for i, isEdge in enumerate(self.m_adjacency[i]) if isEdge == 1]
+            linked = []
+            while adjacents:
+                to_compare = adjacents.pop()
+                for adjacent in adjacents:
+                    if self.m_adjacency[to_compare][adjacent] == 1:
+                        linked.append((to_compare, adjacent))
+            if len(linked) == 0:
+                weak_vertices.append(self.vertex[i])
+
+        return weak_vertices
