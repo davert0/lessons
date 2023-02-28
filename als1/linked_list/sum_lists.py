@@ -2,7 +2,6 @@ from linked_list import LinkedList
 
 
 def sum_linked_lists(first_list: LinkedList, second_list: LinkedList):
-
     if first_list.len() != second_list.len():
         return None
 

@@ -27,9 +27,7 @@ class OrderedList:
             return
         node = self.head
         while node:
-
             if not node.next and self.compare(node.value, new_node.value) < 0:
-
                 node.next = new_node
                 new_node.prev = node
                 self.tail = new_node
