@@ -18,5 +18,6 @@ class Solution:
 
         return longest
 
+
 sol = Solution()
 sol.lengthOfLongestSubstring("abcabcbb")
