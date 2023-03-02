@@ -66,7 +66,7 @@ class SimpleGraph:
         self.SearchGraph(next_vertex_index, VTo, is_on_stack)
 
     def GetNextAdjacentVertex(self, VIndex):
-        for (index, edge) in enumerate(self.m_adjacency[VIndex]):
+        for index, edge in enumerate(self.m_adjacency[VIndex]):
             if edge == 1 and self.vertex[index].hit is False:
                 return index, False
 
