@@ -15,7 +15,6 @@ class Solution:
             return res
 
         for l in s:
-
             if i < numRows and not should_write_diagonal:
                 table[i][j] = l
                 i += 1
@@ -38,6 +37,7 @@ class Solution:
                     res += j
 
         return res
-            
+
+
 s = Solution()
 print(s.convert("ABCDEF", 2))
