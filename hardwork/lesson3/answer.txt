@@ -1,0 +1,99 @@
+Переосмыслил для себя ТДД. Ни на одном из рабочих мест этой методологии
+не придерживались, я несколько раз для себя пробовал, но в конечном счете забрасывал. Перечитывая Разработку, управляемую
+тестирования из Курса карьеры, фраза "Когда вы рефакторите или улучшаете говнокод, вы не можете его сломать, потому что
+это говнокод :)" задела за живое, поскольку очень часто оказывался в такой ситуации)
+Далее - снова начать писать по TDD - занятие выматывающее, особенно когда привык копипастить базовые вещи, как например
+конструктор нового хэндлера.
+
+
+func TestNew(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockGeocoder := NewMockGeocoderClient(ctrl)
+	mockLogger := NewMockLogger(ctrl)
+
+	type args struct {
+		client geocoderClient
+		logger logger
+	}
+	tests := []struct {
+		args args
+		want *Handler
+		name string
+	}{
+		{
+			name: "nil",
+			args: args{
+				client: nil,
+				logger: nil,
+			},
+			want: nil,
+		},
+		{
+			name: "ok",
+			args: args{
+				client: mockGeocoder,
+				logger: mockLogger,
+			},
+			want: &Handler{
+				geocoderClient: mockGeocoder,
+				logger:         mockLogger,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, New(tt.args.client, tt.args.logger))
+		})
+	}
+}
+
+
+type Handler struct {
+	geocoderClient geocoderClient
+	logger         logger
+}
+
+func New(client geocoderClient, logger logger) *Handler {
+	if client == nil || logger == nil {
+		return nil
+	}
+
+	return &Handler{
+		geocoderClient: client,
+		logger:         logger,
+	}
+}
+
+
+После прочтения 3 уровня мышления о программе-2, я понял, что подход, когда первичен дизайн - это основной подход к
+тестирования в моей текущей команде, только реализован он на уровне интеграционных тестов.
+Также тесткейсы прорабатываются совместно с QA до начала реализации задачи.
+
+// description Проверка получения данных по сделкам другого агентства
+// precondition В БД есть 2 АН и агентский лид, принадлежаший АН1
+func (s *PartnerxRpcGetDeals) Test_SingleDeal_Auth_AgentFromAnotherTeam() {
+	dsl := s.DSL.PartnerX
+	a1 := dsl.Agency()
+	a2 := dsl.Agency()
+	dsl.AgencyLead(dsl.Lead(), a1)
+	dsl.PrepareDatabase()
+
+	// step Вызвать rpc GetDeals, передав в авторизации основного пользователя АН2
+	out, err := s.API.RPC.GetDeals(
+		context.Background(),
+		s.defaultInput(
+			s.withMembers(a1.RootUser.UserID),
+			s.asAvitoUser(a2.RootUser.UserID),
+		),
+	)
+
+	// expected В ответе нет данных по сделкам АН1
+	s.Require().NoError(err)
+	s.Require().Nil(out.Error)
+	s.Require().NotNil(out.Result)
+	s.Require().Empty(out.Result.Deals)
+}
+
+При таком подходе изменения деталей реализации не будут ломать систему, пока соблюдается контракт, прописанный в тесткейсах
