@@ -1,0 +1,52 @@
+package jobs
+
+
+// Раннер позволяет регистрировать внутри себя структуры, реализующие интерфейс Job,
+// и выполнять их параллельно, используется внутри отдельного воркера
+type (
+	DefaultRunner struct {
+		logger  internal.Log
+		metrics internal.Metrics
+
+		jobs      map[string]Job
+		enrichers []ContextEnricher
+	}
+)
+
+func NewDefaultRunner(logger internal.Log, metrics internal.Metrics, enrichers ...ContextEnricher) *DefaultRunner {
+	return &DefaultRunner{jobs: map[string]Job{}, logger: logger, metrics: metrics, enrichers: enrichers}
+}
+
+func (r *DefaultRunner) RegisterAll(jobs ...Job) error {
+	for _, job := range jobs {
+		if err := r.Register(job); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (r *DefaultRunner) Register(job Job) error {
+	if _, alreadyExists := r.jobs[job.Name()]; alreadyExists {
+		return fmt.Errorf("job '%s' already registered", job.Name())
+	}
+
+	r.jobs[job.Name()] = job
+
+	return nil
+}
+
+func (r *DefaultRunner) Run(ctx context.Context) error {
+	group, ctx := errgroup.WithContext(ctx)
+
+	for _, job := range r.jobs {
+		job := job
+
+		group.Go(func() error {
+			return r.run(ctx, job)
+		})
+	}
+
+	return group.Wait()
+}

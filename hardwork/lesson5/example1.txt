@@ -1,0 +1,82 @@
+package auditable
+
+
+// структура реализует интерфейс AuditableContext, позволяющий записывать лог действий клиентов микросервиса
+// используется в важных т.з. бизнеса CRUD операциях
+
+type (
+	DefaultContext struct {
+		trx    transactional.Context
+		sec    security.Context
+		events []*Event
+	}
+)
+
+func (d *DefaultContext) Context() context.Context {
+	return d.sec
+}
+
+func (d *DefaultContext) TransactionalContext() transactional.Context {
+	return d.trx
+}
+
+func NewEmpty(sec security.Context, trx transactional.Context) *DefaultContext {
+	return &DefaultContext{
+		sec:    sec,
+		trx:    trx,
+		events: make([]*Event, 0),
+	}
+}
+
+func (d *DefaultContext) AddEvent(agencyID internal.AgencyID, agentID *internal.AgentID, entityAction ActionType) {
+	event := &Event{
+		AgencyID: agencyID,
+		AgentID:  agentID,
+		Action:   entityAction,
+	}
+	d.events = append(d.events, event)
+}
+
+func (d *DefaultContext) GetEvents() []*Event {
+	return d.events
+}
+
+func (d *DefaultContext) Authentication() security.Authentication {
+	return d.sec.Authentication()
+}
+
+func (d *DefaultContext) HasPermission(permission security.Permission) error {
+	return d.sec.HasPermission(permission)
+}
+
+func (d *DefaultContext) Parent() transactional.Context {
+	return d.trx.Parent()
+}
+
+func (d *DefaultContext) WithLock() transactional.Context {
+	return d.trx.WithLock()
+}
+
+func (d *DefaultContext) Transaction() (transactional.Transaction, error) {
+	return d.trx.Transaction()
+}
+
+func (d *DefaultContext) LockRequested() bool {
+	return d.trx.LockRequested()
+}
+
+func (d *DefaultContext) Deadline() (deadline time.Time, ok bool) {
+	return d.sec.Deadline()
+}
+
+func (d *DefaultContext) Done() <-chan struct{} {
+	return d.sec.Done()
+}
+
+func (d *DefaultContext) Err() error {
+	return d.sec.Err()
+}
+
+func (d *DefaultContext) Value(key any) any {
+	return d.sec.Value(key)
+}
