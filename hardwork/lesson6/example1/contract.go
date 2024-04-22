@@ -19,6 +19,7 @@ type Priority int64
 type Status int64
 
 var ErrTaskNameAlreadyExist = errors.New("task with that name already exist")
+var ErrTaskNotFound = errors.New("task with that id not found")
 
 //Приложение должно позволять пользователю управлять списком задач.
 

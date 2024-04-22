@@ -51,7 +51,17 @@ func TestEditTaskSucces(t *testing.T) {
 	taskManager, _ := New()
 	edited_name := "test_name_edited"
 	taskManager.AddTask("test_name", "test_description", High)
-	taskManager.EditTask(0, edited_name, "test_description", High)
+	err := taskManager.EditTask(0, edited_name, "test_description", High)
 
+	assert.NoError(t, err)
 	assert.Equal(t, edited_name, taskManager.GetTasks()[0].GetName())
+}
+
+func TestEditTaskWrongIdError(t *testing.T) {
+	taskManager, _ := New()
+	edited_name := "test_name_edited"
+	taskManager.AddTask("test_name", "test_description", High)
+	err := taskManager.EditTask(1, edited_name, "test_description", High)
+
+	assert.ErrorIs(t, err, ErrTaskNotFound)
 }

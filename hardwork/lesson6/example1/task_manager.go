@@ -27,6 +27,10 @@ func (tm *FileTaskManager) AddTask(name string, description string, priority Pri
 }
 
 func (tm *FileTaskManager) EditTask(id int, name string, description string, priority Priority) error {
+	if id < 0 || id >= len(tm.tasks) {
+		return ErrTaskNotFound
+	}
+
 	t := tm.tasks[id]
 	t = &task{
 		id:          id,
