@@ -65,3 +65,19 @@ func TestEditTaskWrongIdError(t *testing.T) {
 
 	assert.ErrorIs(t, err, ErrTaskNotFound)
 }
+
+func TestDeleteTaskSuccess(t *testing.T) {
+	taskManager, _ := New()
+	taskManager.AddTask("test_name", "test_description", High)
+	err := taskManager.DeleteTask(0)
+	assert.NoError(t, err)
+	assert.Empty(t, taskManager.GetTasks())
+}
+
+func TestDeleteTaskErrTaskNotFound(t *testing.T) {
+	taskManager, _ := New()
+	taskManager.AddTask("test_name", "test_description", High)
+	err := taskManager.DeleteTask(1)
+	assert.ErrorIs(t, err, ErrTaskNotFound)
+	assert.Equal(t, 1, len(taskManager.GetTasks()))
+}

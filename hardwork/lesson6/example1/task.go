@@ -36,3 +36,7 @@ func (t *task) GetStatus() Status {
 	//TODO implement me
 	return t.status
 }
+
+func (t *task) GetID() int {
+	return t.id
+}

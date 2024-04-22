@@ -54,6 +54,7 @@ type Task interface {
 
 	// запросы
 
+	GetID() int
 	GetName() string
 	GetDescription() string
 	GetPriority() Priority
