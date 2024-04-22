@@ -26,9 +26,18 @@ func (tm *FileTaskManager) AddTask(name string, description string, priority Pri
 	return nil
 }
 
-func (t *FileTaskManager) EditTask(id int, name string, description string, priority Priority) error {
-	//TODO implement me
-	panic("implement me")
+func (tm *FileTaskManager) EditTask(id int, name string, description string, priority Priority) error {
+	t := tm.tasks[id]
+	t = &task{
+		id:          id,
+		name:        name,
+		description: description,
+		priority:    0,
+		status:      t.GetStatus(),
+		date:        t.GetDate(),
+	}
+	tm.tasks[id] = t
+	return nil
 }
 
 func (t *FileTaskManager) DeleteTask(id int) error {

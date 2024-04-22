@@ -45,5 +45,13 @@ func TestAddTaskErrorNameExist(t *testing.T) {
 	assert.NoError(t, err)
 	err = taskManager.AddTask("test_name", "test_description", High)
 	assert.ErrorIs(t, err, ErrTaskNameAlreadyExist)
+}
 
+func TestEditTaskSucces(t *testing.T) {
+	taskManager, _ := New()
+	edited_name := "test_name_edited"
+	taskManager.AddTask("test_name", "test_description", High)
+	taskManager.EditTask(0, edited_name, "test_description", High)
+
+	assert.Equal(t, edited_name, taskManager.GetTasks()[0].GetName())
 }

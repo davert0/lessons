@@ -34,5 +34,5 @@ func (t *task) GetDate() string {
 
 func (t *task) GetStatus() Status {
 	//TODO implement me
-	panic("implement me")
+	return t.status
 }
