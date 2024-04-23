@@ -89,3 +89,10 @@ func TestSetTaskCompletedSuccess(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, Complete, taskManager.GetTasks()[0].GetStatus())
 }
+
+func TestSetTaskCompletedErrTaskNotFound(t *testing.T) {
+	taskManager, _ := New()
+	taskManager.AddTask("test_name", "test_description", High)
+	err := taskManager.SetTaskCompleted(1)
+	assert.ErrorIs(t, err, ErrTaskNotFound)
+}
