@@ -10,8 +10,8 @@ type task struct {
 }
 
 func (t *task) SetCompleted() error {
-	//TODO implement me
-	panic("implement me")
+	t.status = Complete
+	return nil
 }
 
 func (t *task) GetName() string {
@@ -19,13 +19,11 @@ func (t *task) GetName() string {
 }
 
 func (t *task) GetDescription() string {
-	//TODO implement me
-	panic("implement me")
+	return t.description
 }
 
 func (t *task) GetPriority() Priority {
-	//TODO implement me
-	panic("implement me")
+	return t.priority
 }
 
 func (t *task) GetDate() string {

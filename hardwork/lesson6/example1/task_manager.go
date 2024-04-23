@@ -63,9 +63,14 @@ func (tm *FileTaskManager) DeleteTask(id int) error {
 	return ErrTaskNotFound
 }
 
-func (t *FileTaskManager) SetTaskCompleted(id int) error {
-	//TODO implement me
-	panic("implement me")
+func (tm *FileTaskManager) SetTaskCompleted(id int) error {
+	for _, t := range tm.tasks {
+		if t.GetID() == id {
+			t.SetCompleted()
+			return nil
+		}
+	}
+	return ErrTaskNotFound
 }
 
 func (t *FileTaskManager) GetTasks() []Task {
