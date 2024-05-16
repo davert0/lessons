@@ -1,0 +1,43 @@
+Поскольку в Go наследование реализуется через встраивание структур (embedding),
+структура-потомок получает доступ ко всем публичным полям и методам структуры-родителя.
+
+
+1. Метод публичен в родительском классе А и публичен в его потомке B.
+
+type A struct {}
+
+func (a *A) PublicMethod() {
+    fmt.Println("I am from A")
+}
+
+
+type B struct {
+    A
+}
+
+func main() {
+    b := B{}
+    // "I am from A"
+    b.PublicMethod()
+}
+
+
+4. метод скрыт в родительском классе А и скрыт в его потомке B.
+
+type A struct {}
+
+func (a *A) privateMethod() {
+    fmt.Println("I am from A")
+}
+
+
+type B struct {
+    A
+}
+
+func main() {
+    b := B{}
+
+    // error
+    b.privateMethod()
+}
