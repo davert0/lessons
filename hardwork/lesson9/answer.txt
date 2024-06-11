@@ -1,0 +1,153 @@
+1. Уровень реализации (для разминки).
+
+// до - здесь происходит запрос на получение признака пользователя для проверки доступа
+hasToggle, err := u.userTogglesGateway.HasComfortableDealToggle(ctx, userTogglesQueueElem.UserID)
+		if err != nil {
+			return err
+		}
+
+// после - логика определения доступа инкапсулирована внутри сервиса, отвечающего за Attribute Based Access Control
+hasAccess, err := u.abacGateway.HasComfortableDealAccess(ctx, userTogglesQueueElem.UserID)
+
+
+1.1
+
+Функция использовалась только в тестах, однако этот код повсеместно используется в проекте, вынес его в отдельный пакет
+
+func isValidationError(err error) bool {
+	var target *rpcprotocol.ValidationError
+	return errors.As(err, &target)
+}
+
+
+1.2
+
+// до
+	dealID := external.DealID(request.Path().GetDealId())
+
+// после
+	params := request.Path()
+	dealID := external.DealID(params.GetDealId())
+
+
+1.3
+
+// до
+    Handle(ctx security.Context, statusIn []dicts.DealStatus, memberIn []external.UserID) (Deal, error)
+
+// после
+    Handle(ctx security.Context, spec *GetDealsSpec) (Deal, error)
+    GetDealsSpec struct {
+        StatusIn []dicts.DealStatus
+        MemberIn []external.UserID
+    }
+
+
+1.4
+
+// до - код который ходит по сервисам и собирает детали по пользователям и объявлениям, писался несколько раз в
+разных местах, везде немного по разному
+
+func (u *Usecase) determinerDetails(
+	ctx context.Context,
+	page pageable.Page[deals.Deal],
+) (map[external.UserID]AggregatedUserDetails, map[external.ItemID]items.Details, error) {
+	if len(page.Elements()) == 0 {
+		return map[external.UserID]AggregatedUserDetails{}, map[external.ItemID]items.Details{}, nil
+	}
+
+	userIDs := make([]external.UserID, 0)
+	itemIDs := make([]external.ItemID, 0)
+	for _, element := range page.Elements() {
+		for _, member := range element.Team {
+			if member.Role != dictionaries.DealTeamMemberRoleAgent &&
+				member.Role != dictionaries.DealTeamMemberRoleSeller {
+				continue
+			}
+			userIDs = append(userIDs, member.ID)
+		}
+
+		agentItemID := element.RealtyObject.AgentItemID
+		if agentItemID != nil {
+			itemIDs = append(itemIDs, *agentItemID)
+		}
+
+		sellerItemID := element.RealtyObject.SellerItemID
+		if sellerItemID != nil {
+			itemIDs = append(itemIDs, *sellerItemID)
+		}
+	}
+
+	group, groupCtx := errgroup.WithContext(ctx)
+
+	var userDetails map[external.UserID]users.Details
+	group.Go(func() error {
+		var err error
+		userDetails, err = u.users.GetAll(groupCtx, userIDs...)
+		return err
+	})
+
+	var phoneDetails map[external.UserID]phones.Details
+	group.Go(func() error {
+		var err error
+		phoneDetails, err = u.phones.GetAll(groupCtx, userIDs...)
+		return err
+	})
+
+	var avatarDetails map[external.UserID]avatars.Details
+	group.Go(func() error {
+		var err error
+		avatarDetails, err = u.avatars.GetDetailsByUserIDs(groupCtx, userIDs...)
+		return err
+	})
+
+	var itemDetails map[external.ItemID]items.Details
+	if len(itemIDs) > 0 {
+		group.Go(func() error {
+			var err error
+			itemDetails, err = u.items.GetAll(groupCtx, itemIDs...)
+			return err
+		})
+	}
+
+	if err := group.Wait(); err != nil {
+		return nil, nil, err
+	}
+
+	aggregatedUserDetails, err := u.aggregateUserDetails(userDetails, phoneDetails, avatarDetails)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return aggregatedUserDetails, itemDetails, nil
+}
+
+// после - вынес в отдельный класс, который переиспользуется во всех остальных местах
+    type Determiner interface {
+        DetermineUserDetails(ctx context.Context, userIDs []external.UserID) (map[external.UserID]contracts.AggregatedUserDetails, error)
+        DetermineItemDetails(ctx context.Context, itemIDs []external.ItemID) (map[external.ItemID]items.Details, error)
+        DetermineExtendedItemDetails(ctx context.Context, itemIDs []external.ItemID) (map[external.ItemID]items.ExtendedDetails, error)
+    }
+
+
+1.5
+
+// до - метод возвращал кучу полей
+type (
+	PhoneProperties struct {
+		IsVirtual           bool
+		QuestionnairePassed bool
+		RealCallCompleted   bool
+	}
+
+	GetContactsData struct {
+		Phone      string
+		Name       string
+		Properties PhoneProperties
+	}
+)
+
+GetLeadContacts(ctx context.Context, leadID internal.AgencyLeadID, userID external.UserID) (*GetContactsData, error)
+
+// после - выпилены все поля кроме телефона, который единственный использовался
+GetLeadContacts(ctx context.Context, leadID internal.AgencyLeadID, userID external.UserID) (Phone, error)
