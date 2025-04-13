@@ -3,3 +3,4 @@ __pycache__
 .idea
 testdata
 venv
+.fake
