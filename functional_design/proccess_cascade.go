@@ -7,9 +7,9 @@ func ProcessCascade(currentState BoardState) BoardState {
 	}
 
 	return currentState.
-	Pipe(func(bs BoardState) BoardState {
-		return RemoveMatches(currentState, matches)
-	}).
-	Pipe(FillEmptySpaces).
-	Pipe(ProcessCascade)
+		Pipe(func(bs BoardState) BoardState {
+			return RemoveMatches(currentState, matches)
+		}).
+		Pipe(FillEmptySpaces).
+		Pipe(ProcessCascade)
 }
