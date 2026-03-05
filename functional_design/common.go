@@ -32,6 +32,10 @@ type BoardState struct {
 	Score int
 }
 
+func (s BoardState) Pipe(fn func(BoardState) BoardState) BoardState {
+	return fn(s)
+}
+
 func cloneCells(cells [][]Element, size int) [][]Element {
 	newCells := make([][]Element, size)
 	for i := 0; i < size; i++ {

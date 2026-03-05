@@ -1,28 +1,17 @@
 package functionaldesign
 
 func InitializeGame(boardSize int) BoardState {
-	initial := BoardState{
+	return BoardState{
 		Board: Board{
 			Size:  boardSize,
 			Cells: makeEmptyBoard(boardSize),
 		},
 		Score: 0,
-	}
-
-	return pipe(
-		initial,
-		FillEmptySpaces,
-		ProcessCascade,
-	)
+	}.
+		Pipe(FillEmptySpaces).
+		Pipe(ProcessCascade)
 }
 
-func pipe(initial BoardState, fns ...func(BoardState) BoardState) BoardState {
-	state := initial
-	for _, fn := range fns {
-		state = fn(state)
-	}
-	return state
-}
 
 func makeEmptyBoard(size int) [][]Element {
 	cells := make([][]Element, size)

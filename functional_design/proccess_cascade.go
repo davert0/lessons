@@ -6,7 +6,10 @@ func ProcessCascade(currentState BoardState) BoardState {
 		return currentState
 	}
 
-	newState := RemoveMatches(currentState, matches)
-	newState = FillEmptySpaces(newState)
-	return ProcessCascade(newState)
+	return currentState.
+	Pipe(func(bs BoardState) BoardState {
+		return RemoveMatches(currentState, matches)
+	}).
+	Pipe(FillEmptySpaces).
+	Pipe(ProcessCascade)
 }
