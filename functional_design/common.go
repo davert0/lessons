@@ -1,4 +1,6 @@
-package functionaldesign
+package main
+
+import "fmt"
 
 type MatchDirection int
 
@@ -34,6 +36,31 @@ type BoardState struct {
 
 func (s BoardState) Pipe(fn func(BoardState) BoardState) BoardState {
 	return fn(s)
+}
+
+func (bs BoardState) Draw(ask bool) BoardState {
+	board := bs.Board
+
+	fmt.Print("  ")
+	for i := 0; i < board.Size; i++ {
+		fmt.Printf("%d ", i)
+	}
+	fmt.Println()
+
+	for i := 0; i < board.Size; i++ {
+		fmt.Printf("%d ", i)
+		for j := 0; j < board.Size; j++ {
+			fmt.Printf("%c ", board.Cells[i][j].Symbol)
+		}
+		fmt.Println()
+	}
+	fmt.Println()
+
+	if ask {
+		fmt.Scanln()
+	}
+
+	return bs
 }
 
 func cloneCells(cells [][]Element, size int) [][]Element {

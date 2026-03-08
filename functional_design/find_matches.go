@@ -1,4 +1,4 @@
-package functionaldesign
+package main
 
 func FindMatches(board Board) []Match {
 	var matches []Match

@@ -1,4 +1,4 @@
-package functionaldesign
+package main
 
 func InitializeGame(boardSize int) BoardState {
 	return BoardState{

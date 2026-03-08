@@ -1,4 +1,4 @@
-package functionaldesign
+package main
 
 func RemoveMatches(currentState BoardState, matches []Match) BoardState {
 	if len(matches) == 0 {

@@ -1,4 +1,4 @@
-package functionaldesign
+package main
 
 import "math/rand"
 
