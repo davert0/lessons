@@ -1,0 +1,117 @@
+
+// 1. Функция проверяет content type Application/Json и одновременно пишет заголовок в HttpResponse
+
+// До
+	if !common.CheckApplicationJSON(writer, request) {
+		return
+	}
+// После
+    if !IsApplicationJSONAccepted(r) {
+        w.WriteHeader(http.StatusNotAcceptable)
+        return
+    }
+
+
+
+// 2. Функция парсит json, валидирует, трансформирует данные, отправляет badRequest
+
+// До
+	requestBody, ok := a.checkConsentTokenRequestBody(checkCtx, writer, body)
+	if !ok {
+		return
+	}
+
+// После
+	req, err := parseConsentTokenRequest(body)
+    if err != nil {
+        log.Err(ctx, "Parse ConsentTokenRequest body error", log.Error(err))
+        a.sendErrBadRequest(ctx, w)
+        return
+    }
+
+    ctx = log.WithFields(ctx, log.Reflect("requestBody", req))
+
+    if err := validateConsentTokenRequest(req); err != nil {
+        log.Err(ctx, "Accounts: ConsentToken: "+err.Error())
+        a.sendErrBadRequest(ctx, w)
+        return
+    }
+
+
+
+// 3. Внутри - бизнес-логика выбора стратегии, конвертация данных, обращение к внешнему сервису, логировани, отправка http ответа
+
+// До
+	partnerID, ok := a.getPartnerIDForConsentToken(ctx, requestBody.BrandID, consentID, writer)
+	if !ok {
+		return
+	}
+
+// После
+	partnerID, err := a.resolvePartnerID(ctx, brandID, consentID)
+    if err != nil {
+        log.Err(ctx, "cannot resolve partner id", log.Error(err))
+        if errors.Is(err, ErrBadRequest) {
+            a.sendErrBadRequest(ctx, w)
+			return
+        } 
+		a.sendErrInternalServerError(ctx, w)
+        return
+	}
+
+
+
+// 4. Функция проверяет userInfo, принимает бизнес решение, отзывает согласие
+
+// До
+	if a.revokeConsentIfUserInfoFail(ctx, writer, consentID, partnerID, requestBody.SiebelID,
+		idTok.Subject, clientID, tokenManager) {
+		return
+	}
+
+// После
+	result := a.checkUserInfo(ctx, consentID, partnerID, siebelID, idTokenSub, clientID, tm)
+    if result.Err != nil {
+        log.Err(ctx, "user info error", log.Error(result.Err))
+    }
+
+    needsRevoke := (!result.NameMatch || !result.PhoneMatch || result.Err != nil) &&
+        a.features.RevokeConsentIfUserInfoFail
+
+    if needsRevoke {
+        if err := a.revokeConsent(ctx, consentID, partnerID); err != nil {
+            log.Err(ctx, "Delete consent error", log.Error(err),
+                log.String("consentID", consentID), log.String("partnerID", partnerID))
+        }
+
+        failure := classifyUserInfoFailure(result)
+        switch failure {
+        case UserInfoInternalError:
+            a.sendErrInternalServerError(ctx, w)
+        case UserInfoNoMatchNamePhone:
+            a.sendErrUserNoMatchNamePhone(ctx, w)
+        case UserInfoNoMatchName:
+            a.sendErrUserNoMatchName(ctx, w)
+        case UserInfoNoMatchPhone:
+            a.sendErrUserNoMatchPhone(ctx, w)
+        }
+
+        if failure != UserInfoInternalError {
+            if err := a.consentsProvider.MarkUserInfoFailed(ctx, consentID); err != nil {
+                log.Err(ctx, "could not mark consent as user info failed", log.Error(err))
+            }
+        }
+        return
+    }
+
+
+
+// 5. Функция делает маппинг и дедупликацию, обогащает данные и запускает фоновое обновление для каждого согласия
+
+// До
+	uniqAccs := a.updateUserAccounts(ctx, consentsAccs)
+
+
+// После
+	accs := mergeAccounts(consentsAccs)
+	a.scheduleConsentUpdates(ctx, consentsAccs)
