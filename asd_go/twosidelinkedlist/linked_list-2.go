@@ -45,7 +45,7 @@ func (l *LinkedList2) HasCycle() bool {
 // Номер задачи - 11
 // Краткое название - сортировка двухсвязного списка
 // Сложность O(N^2) - временная, O(1) - пространственная
-// Рефлексия - пришлось вспоминать принцип обычной сортировки пузырьком
+// Рефлексия - переписал с обмена значений на перецепление узлов, чтобы сохранить идентичность узлов для внешних ссылок
 func (l *LinkedList2) Sort() {
 	if l.head == nil {
 		return
@@ -55,21 +55,43 @@ func (l *LinkedList2) Sort() {
 	for swapped {
 		swapped = false
 		node := l.head
-		for node.next != nil {
+		for node != nil && node.next != nil {
 			if node.value > node.next.value {
-				node.value, node.next.value = node.next.value, node.value
+				l.swapAdjacent(node, node.next)
 				swapped = true
+			} else {
+				node = node.next
 			}
-			node = node.next
 		}
 	}
+}
+
+func (l *LinkedList2) swapAdjacent(a, b *Node) {
+	before := a.prev
+	after := b.next
+
+	if before != nil {
+		before.next = b
+	} else {
+		l.head = b
+	}
+	if after != nil {
+		after.prev = a
+	} else {
+		l.tail = a
+	}
+
+	b.prev = before
+	b.next = a
+	a.prev = b
+	a.next = after
 }
 
 // Порядковый номер - 2
 // Номер задачи - 12
 // Краткое название - слияние двухсвязных списков
-// Сложность O(N² + M²) - временная, O(N+M) - пространственная
-// Рефлексия - сначала вручную прописывала все next и prev, потом вспомнил про наличие существующих методов AddInTail
+// Сложность O(N² + M²) - временная (доминирует сортировка), O(1) - пространственная
+// Рефлексия - переписал с копирования значений на перенос существующих узлов через перецепление ссылок
 func (l *LinkedList2) Merge(other *LinkedList2) *LinkedList2 {
 	l.Sort()
 	other.Sort()
@@ -80,23 +102,41 @@ func (l *LinkedList2) Merge(other *LinkedList2) *LinkedList2 {
 
 	for a != nil && b != nil {
 		if a.value <= b.value {
-			result.AddInTail(Node{value: a.value})
-			a = a.next
+			next := a.next
+			result.attachNode(a)
+			a = next
 		} else {
-			result.AddInTail(Node{value: b.value})
-			b = b.next
+			next := b.next
+			result.attachNode(b)
+			b = next
 		}
 	}
 
 	for a != nil {
-		result.AddInTail(Node{value: a.value})
-		a = a.next
+		next := a.next
+		result.attachNode(a)
+		a = next
 	}
 
 	for b != nil {
-		result.AddInTail(Node{value: b.value})
-		b = b.next
+		next := b.next
+		result.attachNode(b)
+		b = next
 	}
 
+	l.head, l.tail = nil, nil
+	other.head, other.tail = nil, nil
+
 	return result
+}
+
+func (l *LinkedList2) attachNode(n *Node) {
+	n.prev = l.tail
+	n.next = nil
+	if l.tail == nil {
+		l.head = n
+	} else {
+		l.tail.next = n
+	}
+	l.tail = n
 }
