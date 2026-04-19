@@ -1,0 +1,133 @@
+
+
+1. Исключать ошибочное поведение на уровне интерфейса.
+
+Пример 1:
+
+// До - метод, который принимает целиком доменную модель, 
+// и обновляет все поля, несовпадающие с текущим состоянием в БД.
+// Проблема в том, что единомоментно можно поменять совершенно любые поля,
+// возможно, не относящиеся к одному бизнес-действию с согласием.
+// Плюс имеется потенциал ошибок из-за невнимательности, например, забыть передать
+// updatedAt и потерять историчность изменения.
+
+type ConsentRepo interface (
+    UpdateConsent(ctx context.Context, consent models.Consent) error
+)
+
+// После
+// Имя метода 1 к 1 совпадает с бизнес-языком, инкапсулирует проверки,
+// не допускает переход в невалидное состояние
+type ConsentRepo interface (
+    AuthoriseConsent(ctx context.Context, consentID models.ConsentID) error
+)
+
+
+Пример 2, выдуманный - методы платежа возвращают интерфейсы, ограничивающие переход в невалидное состояние
+
+
+pending := payment.Create(100)
+p.Refund() // ошибка компиляции, нельзя рефанднуть неподтверждённый платеж
+
+confirmed := pending.Confirm()
+confirmed.Refund() // OK
+
+confirmed.Cancel() // ошибка компиляции, подтвержденный платеж нельзя вернуть
+
+
+// Реализация
+type Pending interface {
+    Confirm() (Confirmed)
+    Cancel() error
+}
+
+type Confirmed interface {
+    Refund() error
+}
+
+type payment struct {
+    id     string
+    amount int
+}
+
+func Create(amount int) Pending {
+    return &payment{id: newID(), amount: amount}
+}
+
+func (p *payment) Confirm(code string) Confirmed {
+    return p, nil
+}
+
+func (p *payment) Cancel() error  { return nil }
+func (p *payment) ID() string     { return p.id }
+func (p *payment) Refund() error  { return nil }
+
+
+
+
+2. Передавать конструктуру обязательные аргументы
+
+Пример 1:
+
+type PaymentService struct {
+    userRepo repo.UserRepo // интерфейс репозитория пользователя
+    paymentRepo repo.PaymentRepo // интерфейс репозитория платежей
+}
+
+func (s *PaymentService) Create(id UserID) {
+    user, err := s.userRepo.Find(id)
+    ...
+}
+
+func NewPaymentService(ur repo.UserRepo, pr repo.PaymentRepo) *PaymentService { 
+    return &PaymentService{ur, pr}
+}
+
+// паника
+s := PaymentService{}
+s.Create("lala")
+
+// все хорошо
+s := NewPaymentService(ur, pr)
+s.Create("lala")
+
+
+Пример 2: гошный енам
+
+
+type Status string
+
+const (
+    StatusNew     Status = "new"
+    StatusPaid    Status = "paid"
+    StatusShipped Status = "shipped"
+)
+
+func NewStatus(s string) (Status, error) {
+    status := Status(s)
+    switch status {
+    case StatusNew, StatusPaid, StatusShipped:
+        return status, nil
+    default:
+        return "", fmt.Errorf("invalid status: %q", s)
+    }
+}
+
+
+3. избегать увлечения примитивными типами данных
+
+Пример 1:
+// bad
+func getOrder(id int) Order {}
+
+// good
+func getOrder (id OrderID) Order {}
+
+
+Пример 2:
+// bad
+func getDistance(lat1, long1, lat2, long2 int) int {}
+
+// good
+func getDistance(coord1, coord2 Coord) Meter {}
+
