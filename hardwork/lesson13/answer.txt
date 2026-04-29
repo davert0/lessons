@@ -56,5 +56,191 @@ func CreateUser(ctx context.Context, db *sql.DB, u User) error {
 
 
 // Рабочий пример - абстрагирование управления токенами
+// Было - ну тут вообще какая-то шляпа была, от одного вида функции плохо становится
+// Внутри каждого update - попытка получения accessToken'а из кэша, либо его обновления через рефреш. Все
+// это происходило конкурентно без синхронизации, что приводило к потерям рефреша из-за ротации
+func (s *Service) newValues(ctx context.Context, uc *models.UserConsent, accessToken []byte) (*values, error) {
+	updates := []func(ctx context.Context, params *updateParams) error{
+		s.updateBalances,
+		s.updatePaymentCards,
+		s.updatePaymentCardsBalances,
+	}
+
+	params := &updateParams{
+		accessToken: accessToken,
+		userConsent: uc,
+		values:      &values{},
+		updateSync:  &sync.Mutex{},
+	}
+
+	var updateErr error
+
+	updCtx, updCancel := context.WithCancel(ctx)
+	errSync := &sync.Mutex{}
+
+	if e := s.updateAccounts(updCtx, params); e != nil {
+		updateErr = e
+
+		if stopError(updateErr) {
+			updCancel()
+
+			return params.values, updateErr
+		}
+	}
+
+	wg := &sync.WaitGroup{}
+	wg.Add(len(updates))
+
+	for idx := range updates {
+		update := updates[idx]
+
+		go func() {
+			err := update(updCtx, params)
+			if err != nil {
+				errSync.Lock()
+
+				if stopError(err) {
+					if updCancel != nil {
+						updCancel()
+						updCancel = nil
+					}
+				}
+
+				updateErr = multierr.Append(updateErr, err)
+
+				errSync.Unlock()
+			}
+
+			wg.Done()
+		}()
+	}
+
+	wg.Wait()
+
+	if updCancel != nil {
+		updCancel()
+	}
+
+	if !errors.Is(updateErr, models.ErrUpdateAccounts) && !stopError(updateErr) {
+		if depsErr := s.updateDeposits(ctx, params); depsErr != nil {
+			updateErr = multierr.Append(updateErr, depsErr)
+		}
+	}
+
+	return params.values, updateErr
+}
+
+// Стало 
+
+// Работа с AT + RT инкапсулирована в токен менеджере.
+// Код, которому для работы нужны токены использует tokenManager.Execute()
+
+func (s *Service) getBalancesAndOperationsFrom(
+	ctx context.Context,
+	uc *models.UserConsent,
+	accountIDs []models.AccountID,
+) (map[models.AccountID]models.ValidatedAccount, []models.Operation, error) {
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
+	var (
+		cardsBalances AsyncResult[[]models.AccountCardBalance]
+		balances    AsyncResult[[]models.AccountBalance]
+	)
+
+	tokenMgr := tokenmanager.New(
+		s.cacheProvider,
+		s.consentsProvider,
+		uc.ConsentID,
+		uc.PartnerID,
+		uc.UserID,
+	)
+
+	var wg sync.WaitGroup
+
+	var (
+		criticalErr error
+		once        sync.Once
+	)
+
+	handleErr := func(err error) {
+		if err == nil {
+			return
+		}
+
+		if isCriticalError(err) {
+			once.Do(func() {
+				criticalErr = err
+
+				cancel()
+			})
+
+			return
+		}
+
+		if ctx.Err() == nil {
+			log.Err(ctx, "error while getting data from PPU", log.Error(err))
+		}
+	}
+
+	wg.Go(func() {
+		cardsBalances.Err = tokenMgr.Execute(ctx, func(token []byte) error {
+			var err error
+
+			cardsBalances.Data, err = s.getCardsBalancesFromPPU(ctx, *uc, token)
+
+			return err
+		})
+		handleErr(cardsBalances.Err)
+	})
+
+	wg.Go(func() {
+		balances.Err = tokenMgr.Execute(ctx, func(token []byte) error {
+			var err error
+
+			balances.Data, err = s.getOperationsFromPPU(ctx, *uc, accountIDs, token)
+
+			return err
+		})
+		handleErr(balances.Err)
+	})
+
+	wg.Wait()
+
+	if criticalErr != nil {
+		return nil, nil, criticalErr
+	}
+
+	validatedBalances := buildValidated(
+		balances,
+		cardsBalances,
+	)
+
+	return validatedBalances, nil
+}
 
 
+func (tm *TokenManager) Execute(ctx context.Context, action func(token []byte) error) error {
+	token, err := tm.getToken(ctx)
+	if err != nil && errors.Is(err, models.ErrNoCache) {
+		token, err = tm.refreshTokenSafe(ctx, token)
+	}
+
+	if err != nil {
+		return errors.Join(err, models.ErrTokenRevoked)
+	}
+
+	err = action(token)
+
+	if err == nil || !isAuthError(err) {
+		return err
+	}
+
+	// кейс, когда получили валидный токен и он успел протухнуть за время хождения по ручкам
+	newToken, err := tm.refreshTokenSafe(ctx, token)
+	if err != nil {
+		return err
+	}
+
+	return action(newToken)
+}
