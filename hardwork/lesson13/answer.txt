@@ -244,3 +244,18 @@ func (tm *TokenManager) Execute(ctx context.Context, action func(token []byte) e
 
 	return action(newToken)
 }
+
+
+// 3 пример - сразу так было, но тоже пример абстрагирования логики проверка auth token'а
+// в функции-обертке
+
+func (a *Accounts) authHandler(f http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		token := rest.ExtractBearerAuthorization(r)
+		if slice.Contains(token, a.tokens) {
+			f(w, r)
+		} else {
+			w.WriteHeader(http.StatusUnauthorized)
+		}
+	}
+}
