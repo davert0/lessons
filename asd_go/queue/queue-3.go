@@ -1,0 +1,102 @@
+package main
+
+import (
+	"testing"
+)
+
+func TestQueueSize(t *testing.T) {
+	q := Queue[int]{}
+	if q.Size() != 0 {
+		t.Error("Size() должен вернуть 0 для пустой очереди")
+	}
+
+	q.Enqueue(1)
+	if q.Size() != 1 {
+		t.Error("Size() должен вернуть 1 после добавления элемента")
+	}
+}
+
+func TestQueueDequeue(t *testing.T) {
+	q := Queue[int]{}
+	_, err := q.Dequeue()
+	if err == nil {
+		t.Error("Dequeue() должен вернуть ошибку для пустой очереди")
+	}
+
+	q.Enqueue(1)
+	val, err := q.Dequeue()
+	if err != nil || val != 1 {
+		t.Error("Dequeue() должен вернуть первый добавленный элемент")
+	}
+}
+
+func TestRotateQueueEmpty(t *testing.T) {
+	q := Queue[int]{}
+	RotateQueue[int](&q, 3)
+	if q.Size() != 0 {
+		t.Error("Вращение пустой очереди не должно изменять ее размер")
+	}
+}
+
+func TestRotateQueueSingle(t *testing.T) {
+	q := Queue[int]{}
+	q.Enqueue(1)
+	RotateQueue[int](&q, 5)
+	val, _ := q.Dequeue()
+	if val != 1 {
+		t.Error("Вращение очереди с одним элементом не должно изменять ее содержимое")
+	}
+}
+
+func TestRotateQueuePositive(t *testing.T) {
+	q := Queue[int]{}
+	for i := 1; i <= 5; i++ {
+		q.Enqueue(i)
+	}
+
+	RotateQueue[int](&q, 2)
+	val, _ := q.Dequeue()
+	if val != 3 {
+		t.Error("После вращения на +2 первым должен быть элемент 3")
+	}
+}
+
+func TestRotateQueueNegative(t *testing.T) {
+	q := Queue[int]{}
+	for i := 1; i <= 5; i++ {
+		q.Enqueue(i)
+	}
+
+	RotateQueue[int](&q, -2)
+	val, _ := q.Dequeue()
+	if val != 4 {
+		t.Error("После вращения на -2 первым должен быть элемент 4")
+	}
+}
+
+func TestRotateQueueLargeN(t *testing.T) {
+	q := Queue[int]{}
+	for i := 1; i <= 5; i++ {
+		q.Enqueue(i)
+	}
+
+	RotateQueue[int](&q, 17)
+	val, _ := q.Dequeue()
+	if val != 3 {
+		t.Error("После вращения на 17 (size=5) первым должен быть элемент 3")
+	}
+}
+
+func TestRotateQueueLargeNegativeN(t *testing.T) {
+	q := Queue[int]{}
+	for i := 1; i <= 5; i++ {
+		q.Enqueue(i)
+	}
+
+	RotateQueue[int](&q, -12)
+	val, _ := q.Dequeue()
+	if val != 4 {
+		t.Error("После вращения на -12 (size=5) первым должен быть элемент 4")
+	}
+}
+

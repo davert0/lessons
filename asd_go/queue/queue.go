@@ -1,10 +1,9 @@
 package main
 
 import (
-	// "os"
-	//	"fmt" включите если используете
 	"container/list"
 	"errors"
+	"os"
 )
 
 type Queue[T any] struct {
@@ -12,6 +11,7 @@ type Queue[T any] struct {
 }
 
 func (q *Queue[T]) Size() int {
+	q.init()
 	return q.lst.Len()
 }
 
