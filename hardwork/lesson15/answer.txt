@@ -1,0 +1,153 @@
+
+1. Ручка получения операций
+
+  До: парсинг входных аргументов
+ 
+  brandID, err := strconv.Atoi(brandIDStr)
+  if err != nil { ... sendErrBadRequest ... return }
+
+  accountID := request.URL.Query().Get("accountId")
+  if accountID == "" { ... sendErrBadRequest ... return }
+
+  startStr := request.URL.Query().Get("start")
+  if startStr == "" { ... sendErrBadRequest ... return }
+
+  start, err := time.Parse(time.RFC3339, startStr)
+  if err != nil { ... sendErrBadRequest ... return }
+
+
+После: парсинг входной валидной структуры:
+
+  type OperationsQuery struct {
+      BrandID     int
+      AccountID   string
+      Start       time.Time
+      End         time.Time
+      First, Last types.OptDecimal
+  }
+
+  func ParseOperationsQuery(v url.Values) (OperationsQuery, error) {
+      var errs []error
+      brandID, err := strconv.Atoi(v.Get("brandId"))
+      if err != nil { errs = append(errs, fmt.Errorf("brandId: %w", err)) }
+
+      accountID := v.Get("accountId")
+      if accountID == "" { errs = append(errs, errors.New("accountId is required")) }
+
+      start, err := time.Parse(time.RFC3339, v.Get("start"))
+      if err != nil { errs = append(errs, fmt.Errorf("start: %w", err)) }
+      // end/first/last — опциональные, парсятся best-effort
+      ...
+      if len(errs) > 0 { return OperationsQuery{}, errors.Join(errs...) }
+      return OperationsQuery{...}, nil
+  }
+
+Вариант, чтобы целиком исключить невалидные состояния - генерировать парсер из опенапи спеки
+
+
+
+2. Цепочка проверок на nil при трансформации из Avro модели в доменную
+  
+До:
+
+if operation.CreditDebitIndicator == nil { return nil, errNilCreditDebitIndicator }
+...
+if operation.Status == nil { return nil, errNilOperationStatus }
+...
+if operation.BankTransactionCode == nil || operation.BankTransactionCode.Code == nil {
+    return nil, errNilBankTransactionCode
+}
+
+После:
+Доменная модель не допускает наличия nil полей
+  type Operation struct {
+      CreditDebit   account.CreditDebitCode   // enum
+      Status        account.TransactionStatus // enum
+      OperationCode account.OperationCode     // enum
+      BookingDateTime time.Time
+      ...
+  }
+
+
+3. Ленивая инициализация
+До:
+    if a.scripts == nil {
+        a.scripts = make(map[string]*redis.Script)
+    }
+После: инициализация перемещена в конструктор
+    
+    func New(redisCluster redis.UniversalClient, expirationTime time.Duration) *Adapter {
+        return &Adapter{
+            client:         redisCluster,
+            expirationTime: expirationTime,
+            cache:          cacheRedis,
+            scripts:        make(map[string]*redis.Script), // ← здесь
+        }
+    }
+
+    func (a *Adapter) script(src string) *redis.Script {
+        a.scriptMu.Lock()
+        defer a.scriptMu.Unlock()
+        s, ok := a.scripts[src]   // больше нет проверки на nil
+        if !ok { s = redis.NewScript(src); a.scripts[src] = s }
+        return s
+    }
+
+
+4. Первая/пустая страница выражена через nil и len
+
+До: такой паттерн встречался в нескольких ручках
+  
+  if balancesResp == nil {
+      balancesResp = &pageResp
+      totalPages = pageResp.Meta.TotalPages.V
+      ...
+  }
+  if totalPages == 0 { return balancesResp, nil }
+  if len(pageResp.Data.Balance) == 0 { ... }
+
+После: генерик функция для пагинации данных
+
+  func fetchAllPages[T any](
+      ctx context.Context,
+      fetch func(ctx context.Context, page int) (data []T, totalPages int, err error),
+  ) ([]T, error) {
+      var all []T
+      for page := 1; ; page++ {
+          data, total, err := fetch(ctx, page)
+          if err != nil { return nil, err }
+          all = append(all, data...)
+          if page >= total { return all, nil }   // единственное условие выхода
+      }
+  }
+
+  5. Доменная модель допускающая невалидные состояния
+  
+До: тип позволяет частично невалидные состояния за счет комбинации флагов, а потом проверяет их валидность
+  type ValidatedAccount struct {
+      Account
+      OkAccount, OkAccountBalance, OkAccountCards,
+      OkAccountCardsBalances, OkDepositDetails bool
+  }
+
+  func (a *ValidatedAccount) IsValid() bool {
+      valid := a.OkAccount && a.OkAccountBalance && a.OkAccountCards
+      for i := range a.Cards { valid = valid && a.Cards[i].IsValid() }
+      if a.Category == account.CategoryDeposit { return valid && a.OkDepositDetails }
+      return valid
+  }
+После: 
+ в builder собирается только валидный тип
+
+  // промежуточный (внутри builder) — с флагами, наружу не отдаётся
+  type partialAccount struct {
+      account models.Account
+      okAccount, okBalance, okCards, okDeposit bool
+  }
+
+  // доменный результат — невалидным быть не может
+  type Account struct{ /* только полностью собранные данные */ }
+
+  func (p partialAccount) Finalize() (Account, bool) {
+      ok := p.okAccount && p.okBalance && p.okCards
+  }
