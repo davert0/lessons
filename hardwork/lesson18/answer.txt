@@ -1,0 +1,117 @@
+Призрачное состояние:
+
+1.
+
+// Внутри функции создаем tmpDir и что-то дальше туда пишем
+func setUpTestStubs(t *testing.T, stubs map[string]string, bodies map[string]string) string {
+	tempDir := t.TempDir()
+	stubsDir := filepath.Join(tempDir, "stubs")
+    ...
+}
+
+
+
+2.
+// Хрупкая jwsSignature,неотраженная в сигнатуре, изменение body между подписанием и request.Post сломает вызов
+
+func (a *Adapter) callPost(
+	ctx context.Context,
+	callData *callData,
+	partnerID string,
+	accessToken []byte,
+	reqBody []byte,
+) ([]byte, error) {
+	jwsSignature, err := a.jwtProvider.BuildDetachedJWS(ctx, partnerID, reqBody)
+	if err != nil {
+		log.Err(ctx, "build jws error", log.Error(err))
+
+		return nil, models.ErrServiceUnexpected
+	}
+
+	interactionUUID, err := a.gen.UUIDv4()
+	if err != nil {
+		log.Err(ctx, "gen uuid error", log.Error(err))
+
+		return nil, models.ErrServiceUnexpected
+	}
+
+	interactionID := interactionUUID.String()
+
+	ctx = log.WithFields(ctx, log.String(account.HeaderFapiInteractionID, interactionID))
+
+	client, err := a.getClient(ctx, partnerID)
+	if err != nil {
+		return nil, err
+	}
+
+	httpResponse, err := client.Post(ctx, callData.path,
+		rest.WithServiceMethod(callData.serviceMethod),
+		rest.WithRequestBody(reqBody),
+		rest.WithRequestHeader(rest.HeaderAuthorization, rest.MakeBearer(slice.ToString(accessToken))),
+		rest.WithRequestHeader(account.HeaderJwsSignature, slice.ToString(jwsSignature)),
+		rest.WithRequestHeader(account.HeaderFapiInteractionID, interactionID),
+		rest.WithRequestHeader(rest.HeaderContentType, rest.JSONContentType),
+		rest.WithRequestHeader(rest.HeaderAccept, rest.JSONContentType),
+		rest.WithRequestHeader(clientIDHeader, partnerID),
+	)
+	if err != nil {
+		log.Err(ctx, "call post error", log.Error(err))
+
+		return nil, models.ErrServiceUnavailable
+	}
+
+	defer rest.CloseResponse(ctx, httpResponse)
+}
+
+
+Погрешности/неточности:
+
+1.
+
+// Завязываюсь только на код 200, при получение 201, 204 - свалюсь в обработку ошибки
+if resp.StatusCode != http.StatusOK {
+    ...
+}
+
+2.
+
+// завязываюсь на то, что activeConsents отсортировано по убыванию даты
+lastConsent := activeConsents[0]
+
+3.
+
+// заязываюсь на регистр, хотя значение tokenType по спецификации регистронезависимо и на валидный "bearer" пойду по ошибочной ветке
+if response.Type != AccessTokenType {...} // "Bearer"
+
+
+
+Когда интерфейс не должен быть проще реализации
+
+1.
+normalizePhone(phone string) string
+
+Простая сигнатура, которая никак не описывает то, как будет нормализовываться номер телефона. Здесь нужна таблица случаев и отдельный тип для нормализованного телефона.
+
+
+2. 
+// сигнатура простая, но в реальности есть большая таблица, когда считать счет валидным
+func buildValidatedAccounts(
+	accountsRes AsyncResult[[]models.Account],
+	balancesRes AsyncResult[[]models.AccountBalance],
+	depositsRes AsyncResult[[]models.DepositDetails],
+	cardsRes AsyncResult[[]models.AccountCard],
+	cardsBalancesRes AsyncResult[[]models.AccountCardBalance],
+) map[models.AccountID]models.ValidatedAccount {...}
+
+
+3.
+
+// Простой интерфейс очереди, но в спецификации должно быть описано:
+// 1. Семантика доставки at least onse
+// 2. В очереди имеется дедупликация по conentID+partnerID
+// 3. Gracefull shutdown дорабатывает активные задачи, но сама очередь физически хранится в редисе и будет персистится до следующего запуска и тд
+// В плане типов можно улучшить, принимая на вход QueueMember
+type Queue interface {
+     Enqueue(ctx context.Context, consentID, partnerID string) error
+     Run(ctx context.Context)
+}
