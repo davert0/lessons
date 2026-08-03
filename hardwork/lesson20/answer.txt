@@ -1,0 +1,203 @@
+
+1. Общее изменяемое состояние в tokenManager, под мьютексом
+
+Было
+
+type TokenManager struct {
+    ...
+
+	mu           sync.Mutex
+	currentToken []byte // изменяемое поле
+	refreshErr   error  // связано с currentToken инвариантом, но живёт отдельным полем, можно независимо изменить
+}
+
+Стало
+
+// tokenState — иммутабельный снимок состояния. Создаётся целиком и никогда не правится, для изменения создается новая пара.
+
+type tokenState struct {
+	token []byte
+	err   error
+}
+
+func (s *tokenState) usable() bool { return s != nil && s.err == nil && len(s.token) > 0 }
+
+type TokenManager struct {
+    ...
+
+	state atomic.Pointer[tokenState]
+}
+
+
+// чтение без блокировки
+func (tm *TokenManager) current(ctx context.Context) (*tokenState, error) {
+	if st := tm.state.Load(); st.usable() {
+		return st, nil
+	}
+
+	token, err := tm.cache.LoadAccessToken(ctx, tm.consentID, tm.partnerID)
+	if err != nil {
+		if !errors.Is(err, models.ErrNoCache) {
+			return nil, err
+		}
+		// Разбор ErrNoCache уехал сюда — Execute больше не знает про устройство кеша.
+		return tm.refresh(ctx, nil)
+	}
+
+	st := &tokenState{token: token}
+	tm.state.Store(st)
+
+	return st, nil
+}
+
+// здесь создаем новое состояние
+func (tm *TokenManager) refresh(ctx context.Context, stale *tokenState) (*tokenState, error) {
+
+	switch cur := tm.state.Load(); {
+	case cur != nil && cur.err != nil:
+		return nil, cur.err
+	case cur != stale && cur.usable():
+		return cur, nil
+	}
+
+	newToken, err := tm.consent.UpdateConsentToken(ctx, tm.consentID, tm.partnerID, tm.userID)
+	if err != nil {
+		tm.state.Store(&tokenState{err: err})
+		return nil, err
+	}
+
+	st := &tokenState{token: newToken}
+	tm.state.Store(st)
+
+	return st, nil
+}
+
+
+2. Изменение объекта из репозитория по ссылке 
+
+Было
+
+@dataclass - мутабельный объекат
+class Meal:
+    id: Optional[int]
+    user_id: Optional[int]
+    food_name: str
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+class UpdateMealUseCase:
+    async def execute(self, user_id: int, meal_id: int, food_name: str) -> Meal:
+        existing_meal = await self.meal_repository.get_by_id(meal_id)
+        ...
+        if food_name:
+            existing_meal.food_name = food_name        # мутируем чужой объект по ссылке
+        updated_meal = await self.meal_repository.update(existing_meal)
+        return updated_meal
+
+
+
+Стало
+from dataclasses import dataclass, replace
+
+@dataclass(frozen=True)          # неизменяемый объект
+class Meal:
+    id: Optional[int]
+    user_id: Optional[int]
+    food_name: str
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+class UpdateMealUseCase:
+    async def execute(self, user_id: int, meal_id: int, food_name: str) -> Meal:
+        existing = await self.meal_repository.get_by_id(meal_id)
+        # получаем новое значение, прочитанный объект остается не тронутым и с ним можно безопасно продолжать работу
+        changed = replace(existing, food_name=food_name) if food_name else existing
+        return await self.meal_repository.update(changed)
+
+
+
+3. Принимаем объект по ссылке и мутируем его поля
+ё
+Было
+func (h *Handler) Handle(ctx context.Context, in *dto.ChangeStepIn, out *dto.ChangeStepOut) error {
+    ...
+    oldSLA := step.SLA                                   // алиас на *int64
+    if err = h.updateStep(ctx, &step, in); err != nil {  // мутация по указателю
+        return fmt.Errorf("can't update step: %w", err)
+    }
+    if err = h.updateProcessVersionFirstStep(ctx, processVersion, step, in.IsFirstStep); err != nil {
+        return fmt.Errorf("can't update process version: %w", err)
+    }
+    if err = h.updateSLANotificationConfig(ctx, step, oldSLA); err != nil {
+        return fmt.Errorf("can't update sla notification config: %w", err)
+    }
+    ...
+}
+
+func (h *Handler) updateStep(ctx context.Context, step *step.Step, in *dto.ChangeStepIn) error {
+    if step.Title != in.Title || ptr.Get(step.SLA) != ptr.Get(in.Sla) ||
+        step.IsTerminal != in.IsTerminal || step.Slug != in.Slug {
+        step.Title = in.Title
+        step.IsTerminal = in.IsTerminal
+        step.Slug = in.Slug
+        step.SLA = in.Sla
+        return h.stepRepo.Save(ctx, *step)
+    }
+    return nil
+}
+
+func (h *Handler) updateProcessVersionFirstStep(ctx context.Context, processVersion process.ProcessVersion, step step.Step, isFirstStep bool) error {
+    if isFirstStep && ptr.Get(processVersion.FirstStepID) != step.ID {
+        processVersion.FirstStepID = &step.ID            // алиас на поле step
+        return h.processVersionRepo.Save(ctx, processVersion)
+    }
+    ...
+}
+
+Стало
+// чистая функция - из старого шага получаем новый, передача по значению, мутации изолированны
+func withChanges(cur step.Step, in *dto.ChangeStepIn) (step.Step, bool) {
+    unchanged := cur.Title == in.Title &&
+        ptr.Get(cur.SLA) == ptr.Get(in.Sla) &&
+        cur.IsTerminal == in.IsTerminal &&
+        cur.Slug == in.Slug
+    if unchanged {
+        return cur, false
+    }
+    cur.Title = in.Title
+    cur.IsTerminal = in.IsTerminal
+    cur.Slug = in.Slug
+    cur.SLA = in.Sla
+    return cur, true
+}
+
+func (h *Handler) Handle(ctx context.Context, in *dto.ChangeStepIn, out *dto.ChangeStepOut) error {
+    ...
+    oldSLA := ptr.Get(step.SLA)          // берем значение
+
+    err = h.trManager.Do(ctx, func(ctx context.Context) error {
+        next, changed := withChanges(step, in)          // старое значение цело, есть новое
+        if changed {
+            if err := h.stepRepo.Save(ctx, next); err != nil {
+                return fmt.Errorf("can't update step: %w", err)
+            }
+        }
+        if err := h.updateProcessVersionFirstStep(ctx, processVersion, next, in.IsFirstStep); err != nil {
+            return fmt.Errorf("can't update process version: %w", err)
+        }
+        if err := h.updateSLANotificationConfig(ctx, next, oldSLA); err != nil {
+            return fmt.Errorf("can't update sla notification config: %w", err)
+        }
+        return nil
+    })
+    ...
+}
+
+func (h *Handler) updateProcessVersionFirstStep(ctx context.Context, processVersion process.ProcessVersion, next step.Step, isFirstStep bool) error {
+    stepID := next.ID                     // локальная копия id
+    if isFirstStep && ptr.Get(processVersion.FirstStepID) != stepID {
+        processVersion.FirstStepID = &stepID
+        return h.processVersionRepo.Save(ctx, processVersion)
+    }
+    ...
+}
